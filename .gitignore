@@ -1,0 +1,6 @@
+node_modules/
+.env
+backend/db/bank.sqlite
+backend/db/bank.sqlite-shm
+backend/db/bank.sqlite-wal
+.DS_Store

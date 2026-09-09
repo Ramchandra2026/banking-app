@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Transfer &amp; History — Ledger</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="app-shell">
+  <header class="app-header">
+    <div class="brand-mark">Ledger<span>.</span></div>
+    <nav class="app-nav">
+      <a href="dashboard.html">Dashboard</a>
+      <a href="transactions.html" class="active">Transfer &amp; History</a>
+      <button id="logout-btn" type="button">Sign out</button>
+    </nav>
+  </header>
+
+  <main class="app-main">
+    <div class="page-heading">
+      <p class="eyebrow">Move money</p>
+      <h1>Transfer &amp; history</h1>
+    </div>
+
+    <div class="form-panel">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="transfer" type="button">Send transfer</button>
+        <button class="tab-btn" data-tab="deposit" type="button">Add funds</button>
+      </div>
+
+      <div class="tab-panel active" id="tab-transfer">
+        <form id="transfer-form" novalidate>
+          <div class="field">
+            <label for="toAccountNumber">Recipient account number</label>
+            <input type="text" id="toAccountNumber" required />
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="transferAmount">Amount (USD)</label>
+              <input type="number" id="transferAmount" min="0.01" step="0.01" required />
+            </div>
+          </div>
+          <div class="field">
+            <label for="transferNote">Note (optional)</label>
+            <input type="text" id="transferNote" maxlength="80" />
+          </div>
+          <div class="form-note" id="transfer-note"></div>
+          <button type="submit" class="btn-primary" id="transfer-submit">Send transfer</button>
+        </form>
+      </div>
+
+      <div class="tab-panel" id="tab-deposit">
+        <form id="deposit-form" novalidate>
+          <div class="field">
+            <label for="depositAmount">Amount (USD)</label>
+            <input type="number" id="depositAmount" min="0.01" step="0.01" required />
+          </div>
+          <div class="field">
+            <label for="depositNote">Note (optional)</label>
+            <input type="text" id="depositNote" maxlength="80" placeholder="e.g. Paycheck" />
+          </div>
+          <div class="form-note" id="deposit-note"></div>
+          <button type="submit" class="btn-primary" id="deposit-submit">Add funds</button>
+        </form>
+      </div>
+    </div>
+
+    <section style="margin-top: 56px;">
+      <h2 class="section-title">Full history</h2>
+      <p class="section-sub">Every credit and debit recorded on this account.</p>
+      <div class="ledger" id="full-ledger">
+        <div class="empty-state">Loading…</div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/transactions.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "ledger-bank-frontend",
+  "version": "1.0.0",
+  "description": "Static frontend for the Ledger banking demo app (Login, Register, Dashboard, Transfer & History)",
+  "private": true,
+  "scripts": {
+    "start": "live-server --port=5500 --entry-file=login.html",
+    "dev": "live-server --port=5500 --entry-file=login.html"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
