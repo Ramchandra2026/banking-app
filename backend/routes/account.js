@@ -30,6 +30,71 @@ router.get("/me", requireAuth, (req, res) => {
       createdAt: a.created_at,
     })),
   });
+
+  });
+
+// PUT /api/account/profile -> update logged-in user's profile
+
+router.put("/profile", requireAuth, (req, res) => {
+
+  const { fullName, email } = req.body;
+
+  if (!fullName || !email) {
+    return res.status(400).json({
+      error: "Full name and email are required."
+    });
+  }
+
+  const cleanName = String(fullName).trim();
+  const cleanEmail = String(email).trim().toLowerCase();
+
+  if (cleanName.length < 2) {
+    return res.status(400).json({
+      error: "Name must be at least 2 characters."
+    });
+  }
+
+  if (!cleanEmail.includes("@")) {
+    return res.status(400).json({
+      error: "Please enter a valid email address."
+    });
+  }
+
+  const existingUser = db
+    .prepare(
+      "SELECT id FROM users WHERE email = ? AND id != ?"
+    )
+    .get(cleanEmail, req.userId);
+
+  if (existingUser) {
+    return res.status(409).json({
+      error: "That email address is already in use."
+    });
+  }
+
+  db.prepare(
+    "UPDATE users SET full_name = ?, email = ? WHERE id = ?"
+  ).run(
+    cleanName,
+    cleanEmail,
+    req.userId
+  );
+
+  const updatedUser = db
+    .prepare(
+      "SELECT id, full_name, email, created_at FROM users WHERE id = ?"
+    )
+    .get(req.userId);
+
+  res.json({
+    message: "Profile updated successfully.",
+    user: {
+      id: updatedUser.id,
+      fullName: updatedUser.full_name,
+      email: updatedUser.email
+    }
+  });
+
 });
 
 module.exports = router;

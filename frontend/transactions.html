@@ -1,83 +1,714 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Transfer &amp; History — Ledger</title>
-<link rel="stylesheet" href="css/style.css" />
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Payments — Ledger Bank</title>
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  />
+
 </head>
+
+
 <body>
 
-<div class="app-shell">
-  <header class="app-header">
-    <div class="brand-mark">Ledger<span>.</span></div>
-    <nav class="app-nav">
-      <a href="dashboard.html">Dashboard</a>
-      <a href="transactions.html" class="active">Transfer &amp; History</a>
-      <button id="logout-btn" type="button">Sign out</button>
+<div class="payments-page">
+
+
+  <!-- =====================================
+       HEADER
+  ====================================== -->
+
+  <header class="payments-header">
+
+    <div class="payments-logo">
+      Ledger<span>.</span>
+    </div>
+
+
+    <nav class="payments-nav">
+
+      <a href="dashboard.html">
+        Dashboard
+      </a>
+
+      <a href="manage.html">
+        Manage
+      </a>
+
+      <a
+        href="transactions.html"
+        class="active"
+      >
+        Payments
+      </a>
+
+      <button
+        id="logout-btn"
+        type="button"
+      >
+        Sign out
+      </button>
+
     </nav>
+
   </header>
 
-  <main class="app-main">
-    <div class="page-heading">
-      <p class="eyebrow">Move money</p>
-      <h1>Transfer &amp; history</h1>
-    </div>
 
-    <div class="form-panel">
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="transfer" type="button">Send transfer</button>
-        <button class="tab-btn" data-tab="deposit" type="button">Add funds</button>
-      </div>
 
-      <div class="tab-panel active" id="tab-transfer">
-        <form id="transfer-form" novalidate>
-          <div class="field">
-            <label for="toAccountNumber">Recipient account number</label>
-            <input type="text" id="toAccountNumber" required />
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label for="transferAmount">Amount (USD)</label>
-              <input type="number" id="transferAmount" min="0.01" step="0.01" required />
-            </div>
-          </div>
-          <div class="field">
-            <label for="transferNote">Note (optional)</label>
-            <input type="text" id="transferNote" maxlength="80" />
-          </div>
-          <div class="form-note" id="transfer-note"></div>
-          <button type="submit" class="btn-primary" id="transfer-submit">Send transfer</button>
-        </form>
-      </div>
+  <!-- =====================================
+       MAIN
+  ====================================== -->
 
-      <div class="tab-panel" id="tab-deposit">
-        <form id="deposit-form" novalidate>
-          <div class="field">
-            <label for="depositAmount">Amount (USD)</label>
-            <input type="number" id="depositAmount" min="0.01" step="0.01" required />
-          </div>
-          <div class="field">
-            <label for="depositNote">Note (optional)</label>
-            <input type="text" id="depositNote" maxlength="80" placeholder="e.g. Paycheck" />
-          </div>
-          <div class="form-note" id="deposit-note"></div>
-          <button type="submit" class="btn-primary" id="deposit-submit">Add funds</button>
-        </form>
-      </div>
-    </div>
+  <main class="payments-main">
 
-    <section style="margin-top: 56px;">
-      <h2 class="section-title">Full history</h2>
-      <p class="section-sub">Every credit and debit recorded on this account.</p>
-      <div class="ledger" id="full-ledger">
-        <div class="empty-state">Loading…</div>
-      </div>
+
+    <!-- PAGE INTRO -->
+
+    <section class="payments-heading">
+
+      <p class="payments-eyebrow">
+        Money movement
+      </p>
+
+      <h1>
+        Payments
+      </h1>
+
+      <p>
+        Send money, add funds and review your
+        recent payment activity.
+      </p>
+
     </section>
+
+
+
+    <!-- =====================================
+         PAYMENT ACTIONS
+    ====================================== -->
+
+    <section class="payment-action-grid">
+
+
+      <!-- =====================================
+           SEND MONEY
+      ====================================== -->
+
+      <div class="payment-card">
+
+        <div class="payment-card-top">
+
+          <div class="payment-icon">
+            →
+          </div>
+
+          <div>
+
+            <p class="payment-label">
+              TRANSFER
+            </p>
+
+            <h2>
+              Send money
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <p class="payment-description">
+          Transfer funds securely to another
+          Ledger account.
+        </p>
+
+
+        <!-- TRANSFER FORM -->
+
+        <form
+          id="transfer-form"
+          novalidate
+        >
+
+
+          <!-- RECIPIENT ACCOUNT -->
+
+          <div class="payment-field">
+
+            <label for="toAccountNumber">
+              Recipient account number
+            </label>
+
+            <input
+              type="text"
+              id="toAccountNumber"
+              placeholder="Enter account number"
+              autocomplete="off"
+              required
+            />
+
+          </div>
+
+
+
+          <!-- TRANSFER AMOUNT -->
+
+          <div class="payment-field">
+
+            <label for="transferAmount">
+              Amount (USD)
+            </label>
+
+            <input
+              type="number"
+              id="transferAmount"
+              placeholder="0.00"
+              min="0.01"
+              step="0.01"
+              required
+            />
+
+          </div>
+
+
+
+          <!-- REFERENCE -->
+
+          <div class="payment-field">
+
+            <label for="transferNote">
+              Reference
+              <span>(optional)</span>
+            </label>
+
+            <input
+              type="text"
+              id="transferNote"
+              maxlength="80"
+              placeholder="e.g. Rent, groceries"
+            />
+
+          </div>
+
+
+
+          <!-- TRANSFER PASSCODE -->
+
+          <div class="transfer-passcode-area">
+
+            <label for="transfer-passcode">
+              4-digit passcode
+            </label>
+
+            <input
+              type="password"
+              id="transfer-passcode"
+              maxlength="4"
+              inputmode="numeric"
+              pattern="[0-9]{4}"
+              placeholder="Enter 4-digit passcode"
+              autocomplete="off"
+            />
+
+            <p
+              id="transfer-passcode-message"
+              class="transfer-passcode-message"
+              aria-live="polite"
+            ></p>
+
+          </div>
+
+
+
+          <!-- TRANSFER MESSAGE -->
+
+          <div
+            class="payment-message"
+            id="transfer-note"
+            aria-live="polite"
+          ></div>
+
+
+
+          <!-- SEND MONEY BUTTON -->
+
+          <button
+            type="submit"
+            class="payment-primary-btn"
+            id="transfer-submit"
+          >
+            Send money
+          </button>
+
+
+        </form>
+
+      </div>
+
+
+
+      <!-- =====================================
+           ADD FUNDS
+      ====================================== -->
+
+      <div class="payment-card deposit-card">
+
+        <div class="payment-card-top">
+
+          <div class="payment-icon">
+            +
+          </div>
+
+          <div>
+
+            <p class="payment-label">
+              FUNDING
+            </p>
+
+            <h2>
+              Add funds
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <p class="payment-description">
+          Add money to your Ledger checking
+          account using a supported funding method.
+        </p>
+
+
+        <!-- ADD FUNDS FORM -->
+
+        <form
+          id="deposit-form"
+          novalidate
+        >
+
+
+          <!-- AMOUNT -->
+
+          <div class="payment-field">
+
+            <label for="depositAmount">
+              Amount (USD)
+            </label>
+
+            <input
+              type="number"
+              id="depositAmount"
+              placeholder="0.00"
+              min="0.01"
+              step="0.01"
+              required
+            />
+
+          </div>
+
+
+
+          <!-- FUNDING METHOD -->
+
+          <div class="payment-field">
+
+            <label for="fundingMethod">
+              Funding method
+            </label>
+
+            <select
+              id="fundingMethod"
+              required
+            >
+
+              <option
+                value=""
+                selected
+                disabled
+              >
+                Select funding method
+              </option>
+
+              <option value="card">
+                Debit / Credit Card
+              </option>
+
+              <option value="upi">
+                UPI
+              </option>
+
+              <option value="bank">
+                Bank Account
+              </option>
+
+            </select>
+
+          </div>
+
+
+
+          <!-- CARD DETAILS -->
+
+          <div
+            id="card-details"
+            class="funding-details"
+            hidden
+          >
+
+            <div class="payment-field">
+
+              <label for="cardNumber">
+                Card number
+              </label>
+
+              <input
+                type="text"
+                id="cardNumber"
+                placeholder="1234 5678 9012 3456"
+                inputmode="numeric"
+                maxlength="19"
+                autocomplete="off"
+              />
+
+            </div>
+
+
+            <div class="payment-field">
+
+              <label for="cardExpiry">
+                Expiry date
+              </label>
+
+              <input
+                type="text"
+                id="cardExpiry"
+                placeholder="MM/YY"
+                maxlength="5"
+                autocomplete="off"
+              />
+
+            </div>
+
+
+            <div class="payment-field">
+
+              <label for="cardCvv">
+                CVV
+              </label>
+
+              <input
+                type="password"
+                id="cardCvv"
+                placeholder="CVV"
+                inputmode="numeric"
+                maxlength="4"
+                autocomplete="off"
+              />
+
+            </div>
+
+          </div>
+
+
+
+          <!-- UPI DETAILS -->
+
+          <div
+            id="upi-details"
+            class="funding-details"
+            hidden
+          >
+
+            <div class="payment-field">
+
+              <label for="upiId">
+                UPI ID
+              </label>
+
+              <input
+                type="text"
+                id="upiId"
+                placeholder="example@upi"
+                autocomplete="off"
+              />
+
+            </div>
+
+          </div>
+
+
+
+          <!-- BANK DETAILS -->
+
+          <div
+            id="bank-details"
+            class="funding-details"
+            hidden
+          >
+
+            <div class="payment-field">
+
+              <label for="bankAccountNumber">
+                Bank account number
+              </label>
+
+              <input
+                type="text"
+                id="bankAccountNumber"
+                placeholder="Enter account number"
+                inputmode="numeric"
+                autocomplete="off"
+              />
+
+            </div>
+
+
+            <div class="payment-field">
+
+              <label for="bankIfsc">
+                IFSC code
+              </label>
+
+              <input
+                type="text"
+                id="bankIfsc"
+                placeholder="e.g. SBIN0001234"
+                maxlength="11"
+                autocomplete="off"
+              />
+
+            </div>
+
+          </div>
+
+
+
+          <!-- REFERENCE -->
+
+          <div class="payment-field">
+
+            <label for="depositNote">
+              Reference
+              <span>(optional)</span>
+            </label>
+
+            <input
+              type="text"
+              id="depositNote"
+              maxlength="80"
+              placeholder="e.g. Paycheck"
+            />
+
+          </div>
+
+
+
+          <!-- PASSCODE -->
+
+          <div class="transfer-passcode-area">
+
+            <label for="deposit-passcode">
+              4-digit passcode
+            </label>
+
+            <input
+              type="password"
+              id="deposit-passcode"
+              maxlength="4"
+              inputmode="numeric"
+              pattern="[0-9]{4}"
+              placeholder="Enter 4-digit passcode"
+              autocomplete="off"
+            />
+
+            <p
+              id="deposit-passcode-message"
+              class="transfer-passcode-message"
+              aria-live="polite"
+            ></p>
+
+          </div>
+
+
+
+          <!-- ACCOUNT INFORMATION -->
+
+          <div class="deposit-info">
+
+            <span>
+              Account
+            </span>
+
+            <strong>
+              Primary checking account
+            </strong>
+
+          </div>
+
+
+
+          <!-- DEPOSIT MESSAGE -->
+
+          <div
+            class="payment-message"
+            id="deposit-note"
+            aria-live="polite"
+          ></div>
+
+
+
+          <!-- ADD FUNDS BUTTON -->
+
+          <button
+            type="submit"
+            class="payment-primary-btn"
+            id="deposit-submit"
+          >
+            Add funds
+          </button>
+
+
+        </form>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         TRANSACTION HISTORY
+    ====================================== -->
+
+    <section class="payments-history">
+
+
+      <div class="payments-section-heading">
+
+        <div>
+
+          <p class="payments-eyebrow">
+            Activity
+          </p>
+
+          <h2>
+            Recent payment activity
+          </h2>
+
+          <p>
+            A complete record of credits and
+            debits on your account.
+          </p>
+
+        </div>
+
+
+        <a
+          href="manage.html"
+          class="view-history-link"
+        >
+          View full history →
+        </a>
+
+      </div>
+
+
+
+      <!-- TRANSACTION LEDGER -->
+
+      <div
+        class="payments-ledger"
+        id="full-ledger"
+      >
+
+        <div class="payments-loading">
+          Loading transactions...
+        </div>
+
+      </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================
+         SECURITY NOTICE
+    ====================================== -->
+
+    <section class="payment-security">
+
+      <div class="security-symbol">
+        ✓
+      </div>
+
+
+      <div>
+
+        <strong>
+          Secure payment processing
+        </strong>
+
+        <p>
+          Transfers and funding requests are
+          authenticated through your Ledger Bank session.
+        </p>
+
+      </div>
+
+    </section>
+
+
   </main>
+
+
+
+  <!-- =====================================
+       FOOTER
+  ====================================== -->
+
+  <footer class="payments-footer">
+
+    <strong>
+      Ledger<span>.</span>
+    </strong>
+
+    <span>
+      Secure digital banking demonstration
+    </span>
+
+    <span>
+      © 2026 Ledger Bank
+    </span>
+
+  </footer>
+
+
 </div>
 
+
+
+<!-- =====================================
+     JAVASCRIPT
+====================================== -->
+
 <script src="js/api.js"></script>
+
 <script src="js/transactions.js"></script>
+
+
 </body>
+
 </html>

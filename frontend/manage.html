@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Manage — Ledger Bank</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+
+<div class="manage-page">
+
+  <!-- HEADER -->
+
+  <header class="manage-header">
+
+    <div class="manage-logo">
+      Ledger<span>.</span>
+    </div>
+
+    <nav class="manage-nav">
+
+      <a href="dashboard.html">
+        Dashboard
+      </a>
+
+      <a href="manage.html" class="active">
+        Manage
+      </a>
+
+      <a href="transactions.html">
+        Payments
+      </a>
+
+      <button id="logout-btn" type="button">
+        Sign out
+      </button>
+
+    </nav>
+
+  </header>
+
+
+  <!-- MAIN -->
+
+  <main class="manage-main">
+
+    <!-- PAGE HEADING -->
+
+    <section class="manage-heading">
+
+      <div>
+
+        <p class="manage-eyebrow">
+          Account management
+        </p>
+
+        <h1>
+          Manage your account
+        </h1>
+
+        <p>
+          Review your activity and manage your banking preferences.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- ACCOUNT OVERVIEW -->
+
+    <section class="manage-account-grid">
+
+      <div class="manage-card account-summary">
+
+        <div class="manage-card-label">
+          ACCOUNT
+        </div>
+
+        <h2 id="manage-account-name">
+          Loading...
+        </h2>
+
+        <p class="manage-account-type">
+          Checking Account
+        </p>
+
+        <div class="manage-account-number">
+
+          <span>
+            Account number
+          </span>
+
+          <strong id="manage-account-number">
+            Loading...
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="manage-card balance-summary">
+
+       <div class="manage-card-label">
+        AVAILABLE BALANCE
+       </div>
+
+        <div class="protected-balance">
+
+  <h2 id="manage-balance">
+    ₹ ••••••
+  </h2>
+
+  <div id="balance-passcode-area" class="balance-passcode-area">
+    <input
+      type="password"
+      id="balance-passcode"
+      maxlength="4"
+      inputmode="numeric"
+      placeholder="Enter 4-digit passcode"
+      autocomplete="off"
+    />
+
+    <button
+      type="button"
+      id="verify-balance-btn"
+      class="show-balance-btn"
+    >
+      Show balance
+    </button>
+
+    <p id="balance-passcode-message"></p>
+  </div>
+
+</div>
+
+  <p>
+    Current available balance
+  </p>
+
+  <a href="transactions.html?tab=deposit">
+    Add funds →
+  </a>
+
+</div>
+    </section>
+
+
+    <!-- TRANSACTIONS -->
+
+    <section class="manage-section">
+
+      <div class="manage-section-heading">
+
+        <div>
+
+          <p class="manage-eyebrow">
+            Activity
+          </p>
+
+          <h2>
+            Transaction history
+          </h2>
+
+          <p>
+            Review your account activity and transaction details.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- FILTERS -->
+
+      <div class="transaction-filters">
+
+        <div class="filter-group">
+
+          <label for="transaction-search">
+            Search
+          </label>
+
+          <input
+            type="search"
+            id="transaction-search"
+            placeholder="Search transactions..."
+          />
+
+        </div>
+
+
+        <div class="filter-group">
+
+          <label for="transaction-type">
+            Type
+          </label>
+
+          <select id="transaction-type">
+
+            <option value="all">
+              All transactions
+            </option>
+
+            <option value="credit">
+              Credits
+            </option>
+
+            <option value="debit">
+              Debits
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div class="filter-group">
+
+          <label for="transaction-date">
+            Date
+          </label>
+
+          <select id="transaction-date">
+
+            <option value="all">
+              All dates
+            </option>
+
+            <option value="7">
+              Last 7 days
+            </option>
+
+            <option value="30">
+              Last 30 days
+            </option>
+
+            <option value="90">
+              Last 90 days
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <!-- TRANSACTION TABLE -->
+
+      <div class="manage-table-container">
+
+        <table class="manage-table">
+
+          <thead>
+
+            <tr>
+
+              <th>
+                Transaction
+              </th>
+
+              <th>
+                Date
+              </th>
+
+              <th>
+                Type
+              </th>
+
+              <th>
+                Amount
+              </th>
+
+              <th>
+                Status
+              </th>
+
+              <th>
+                Transaction ID
+              </th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="manage-transactions">
+
+            <tr>
+
+              <td colspan="6" class="manage-loading">
+                Loading transactions...
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <!-- STATEMENTS -->
+
+    <section class="manage-section">
+
+      <div class="manage-section-heading">
+
+        <div>
+
+          <p class="manage-eyebrow">
+            Documents
+          </p>
+
+          <h2>
+            Statements
+          </h2>
+
+          <p>
+            Keep track of your banking records.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="statement-card">
+
+        <div class="statement-icon">
+          PDF
+        </div>
+
+        <div class="statement-content">
+
+          <h3>
+            Account statement
+          </h3>
+
+          <p>
+            Your transaction history can be reviewed and saved
+            for your records.
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          id="print-statement-btn"
+        >
+          Print statement
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- PROFILE + SECURITY -->
+
+    <section class="manage-settings-grid">
+
+
+      <!-- PROFILE -->
+
+      <!-- PROFILE -->
+
+<div class="manage-card settings-card">
+
+  <div class="settings-icon">
+    ◉
+  </div>
+
+  <p class="manage-eyebrow">
+    Profile
+  </p>
+
+  <h2>
+    Personal information
+  </h2>
+
+  <p>
+    Update the information associated with your Ledger account.
+  </p>
+
+  <form id="profile-form" class="profile-form">
+
+    <div class="profile-field">
+
+      <label for="profile-name-input">
+        Full name
+      </label>
+
+      <input
+        type="text"
+        id="profile-name-input"
+        autocomplete="name"
+        required
+      />
+
+    </div>
+
+
+    <div class="profile-field">
+
+      <label for="profile-email-input">
+        Email address
+      </label>
+
+      <input
+        type="email"
+        id="profile-email-input"
+        autocomplete="email"
+        required
+      />
+
+    </div>
+
+
+    <button
+      type="submit"
+      class="manage-primary-btn"
+      id="profile-save-btn"
+    >
+      Save changes
+    </button>
+
+    <p
+      id="profile-message"
+      class="profile-message"
+      aria-live="polite"
+    ></p>
+
+  </form>
+
+</div>
+
+      <!-- SECURITY -->
+
+      <!-- SECURITY -->
+
+<div class="manage-card settings-card">
+
+  <div class="settings-icon">
+    ✓
+  </div>
+
+  <p class="manage-eyebrow">
+    Security
+  </p>
+
+  <h2>
+    Account security
+  </h2>
+
+  <p>
+    Manage your password and review recent account activity.
+  </p>
+
+
+  <!-- CHANGE PASSWORD -->
+
+  <form id="password-form" class="profile-form">
+
+    <div class="profile-field">
+
+      <label for="current-password">
+        Current password
+      </label>
+
+      <input
+        type="password"
+        id="current-password"
+        autocomplete="current-password"
+        required
+      />
+
+    </div>
+
+
+    <div class="profile-field">
+
+      <label for="new-password">
+        New password
+      </label>
+
+      <input
+        type="password"
+        id="new-password"
+        autocomplete="new-password"
+        minlength="6"
+        required
+      />
+
+    </div>
+
+
+    <div class="profile-field">
+
+      <label for="confirm-password">
+        Confirm new password
+      </label>
+
+      <input
+        type="password"
+        id="confirm-password"
+        autocomplete="new-password"
+        minlength="6"
+        required
+      />
+
+    </div>
+
+
+    <button
+      type="submit"
+      class="manage-primary-btn"
+      id="password-save-btn"
+    >
+      Change password
+    </button>
+
+
+    <p
+      id="password-message"
+      class="profile-message"
+      aria-live="polite"
+    ></p>
+
+  </form>
+
+
+  <!-- LOGIN ACTIVITY -->
+
+  <div class="login-activity">
+
+    <div class="login-activity-header">
+
+      <div>
+
+        <p class="manage-eyebrow">
+          Login activity
+        </p>
+
+        <h3>
+          Recent sessions
+        </h3>
+
+      </div>
+
+      <span class="security-active-badge">
+        Active
+      </span>
+
+    </div>
+
+
+    <div class="login-session">
+
+      <div class="session-icon">
+        💻
+      </div>
+
+      <div class="session-details">
+
+        <strong>
+          Current session
+        </strong>
+
+        <span>
+          Mac • Chrome
+        </span>
+
+        <small>
+          Active now
+        </small>
+
+      </div>
+
+      <span class="session-status">
+        Current
+      </span>
+
+    </div>
+
+
+    <div class="login-session">
+
+      <div class="session-icon">
+        🔐
+      </div>
+
+      <div class="session-details">
+
+        <strong>
+          Account authentication
+        </strong>
+
+        <span>
+          Password protected
+        </span>
+
+        <small>
+          Secure authenticated session
+        </small>
+
+      </div>
+
+      <span class="session-status">
+        Secure
+      </span>
+
+    </div>
+
+
+    <div class="security-check">
+
+      <span>
+        ●
+      </span>
+
+      <strong>
+        Account security active
+      </strong>
+
+    </div>
+
+
+    <p class="security-note">
+      For this demo application, login activity is represented
+      locally. Production banking systems use server-side
+      session and device monitoring.
+    </p>
+
+  </div>
+
+</div>
+
+
+    </section>
+
+
+    <!-- QUICK LINKS -->
+
+    <section class="manage-section">
+
+      <div class="manage-quick-links">
+
+        <a href="dashboard.html">
+          ← Back to dashboard
+        </a>
+
+        <a href="transactions.html">
+          Open payments
+        </a>
+
+        <button id="logout-bottom" type="button">
+          Sign out
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+
+  <footer class="manage-footer">
+
+    <strong>
+      Ledger<span>.</span>
+    </strong>
+
+    <span>
+      Secure digital banking demonstration
+    </span>
+
+    <span>
+      © 2026 Ledger Bank
+    </span>
+
+  </footer>
+
+</div>
+
+
+<script src="js/api.js"></script>
+<script src="js/manage.js"></script>
+
+</body>
+</html>

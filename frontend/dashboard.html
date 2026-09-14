@@ -1,57 +1,191 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard — Ledger</title>
+
+  <title>Dashboard — Ledger Bank</title>
+
   <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
 
-<div class="app-shell">
+<div class="bank-dashboard">
 
-  <header class="app-header">
-    <div class="brand-mark">
+  <!-- =========================
+       TOP NAVIGATION
+  ========================== -->
+
+  <header class="bank-header">
+
+    <div class="bank-logo">
       Ledger<span>.</span>
     </div>
 
-    <nav class="app-nav">
-      <a href="dashboard.html" class="active">Dashboard</a>
-      <a href="transactions.html">Transfer &amp; History</a>
-      <button id="logout-btn" type="button">Sign out</button>
+    <nav class="bank-navigation">
+
+      <a href="dashboard.html" class="bank-nav-link active">
+        Dashboard
+      </a>
+
+      <a href="manage.html" class="bank-nav-link">
+        Manage
+      </a>
+
+      <a href="transactions.html" class="bank-nav-link">
+        Payments
+      </a>
+
+      <button
+        id="logout-btn"
+        type="button"
+        class="bank-signout"
+      >
+        Sign out
+      </button>
+
     </nav>
+
   </header>
 
 
-  <main class="app-main">
+  <!-- =========================
+       MAIN CONTENT
+  ========================== -->
 
-    <div class="page-heading">
-      <p class="eyebrow" id="greeting">Welcome</p>
-      <h1>Your account</h1>
-    </div>
+  <main class="bank-main">
 
 
-    <!-- Account Balance -->
-    <section class="balance-block">
+    <!-- =========================
+         WELCOME
+    ========================== -->
 
-      <div class="balance-figure">
-        <div class="label">Available balance</div>
-        <div class="amount" id="balance-amount">$0.00</div>
+    <section class="bank-welcome">
+
+      <div>
+
+        <p class="bank-eyebrow" id="greeting">
+          Welcome
+        </p>
+
+        <h1>
+          Your financial overview
+        </h1>
+
+        <p class="bank-welcome-text">
+          Manage your money securely from one place.
+        </p>
+
+      </div>
+
+      <div class="bank-security-status">
+
+        <span class="security-dot"></span>
+
+        <span>
+          Account secure
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         BALANCE + ACCOUNT
+    ========================== -->
+
+    <section class="bank-overview-grid">
+
+
+      <!-- Balance Card -->
+
+      <div class="bank-balance-card">
+
+        <div class="balance-card-top">
+
+          <div>
+
+            <span class="bank-card-label">
+              Available balance
+            </span>
+
+            <h2 id="balance-amount">
+              $0.00
+            </h2>
+
+          </div>
+
+          <div class="balance-icon">
+            ₹
+          </div>
+
+        </div>
+
+
+        <div class="balance-card-bottom">
+
+          <div>
+
+            <span class="bank-card-small-label">
+              Primary account
+            </span>
+
+            <strong>
+              Checking Account
+            </strong>
+
+          </div>
+
+          <div class="balance-status">
+            Active
+          </div>
+
+        </div>
+
       </div>
 
 
-      <div class="account-meta">
+      <!-- Account Details -->
 
-        <div>Checking account</div>
+      <div class="bank-account-card">
 
-        <!-- Full account number -->
-        <div class="acct-number" id="account-number">
-          Loading...
+        <div class="account-card-header">
+
+          <div>
+
+            <span class="bank-card-label">
+              Account details
+            </span>
+
+            <h3>
+              Checking Account
+            </h3>
+
+          </div>
+
+          <div class="account-bank-icon">
+            LB
+          </div>
+
         </div>
 
-        <!-- Copy account number -->
+
+        <div class="account-number-section">
+
+          <span>
+            Account number
+          </span>
+
+          <strong id="account-number">
+            Loading...
+          </strong>
+
+        </div>
+
+
         <button
           id="copy-account-btn"
           type="button"
@@ -65,60 +199,1297 @@
     </section>
 
 
-    <!-- Actions -->
-    <div class="action-row">
+    <!-- =========================
+         QUICK ACTIONS
+    ========================== -->
 
-      <a href="transactions.html?tab=deposit" class="action-card">
-        <div class="title">Add funds</div>
-        <div class="desc">
-          Deposit into your checking account
+    <section class="bank-section">
+
+      <div class="bank-section-heading">
+
+        <div>
+
+          <p class="bank-eyebrow">
+            Banking
+          </p>
+
+          <h2>
+            Quick actions
+          </h2>
+
         </div>
-      </a>
+
+      </div>
 
 
-      <a href="transactions.html?tab=transfer" class="action-card">
-        <div class="title">Send a transfer</div>
-        <div class="desc">
-          Move money to another Ledger account
+      <div class="bank-actions-grid">
+
+
+        <!-- Add Funds -->
+
+        <a
+          href="transactions.html?tab=deposit"
+          class="bank-action-card"
+        >
+
+          <div class="bank-action-icon">
+            +
+          </div>
+
+          <div>
+
+            <h3>
+              Add funds
+            </h3>
+
+            <p>
+              Deposit money into your account
+            </p>
+
+          </div>
+
+          <span class="action-arrow">
+            →
+          </span>
+
+        </a>
+
+
+        <!-- Send Money -->
+
+        <a
+          href="transactions.html?tab=transfer"
+          class="bank-action-card"
+        >
+
+          <div class="bank-action-icon">
+            ↑
+          </div>
+
+          <div>
+
+            <h3>
+              Send money
+            </h3>
+
+            <p>
+              Transfer money to another account
+            </p>
+
+          </div>
+
+          <span class="action-arrow">
+            →
+          </span>
+
+        </a>
+
+
+        <!-- Payments -->
+
+        <a
+          href="transactions.html"
+          class="bank-action-card"
+        >
+
+          <div class="bank-action-icon">
+            ≡
+          </div>
+
+          <div>
+
+            <h3>
+              Payments
+            </h3>
+
+            <p>
+              Manage transfers and transactions
+            </p>
+
+          </div>
+
+          <span class="action-arrow">
+            →
+          </span>
+
+        </a>
+
+
+        <!-- Manage Account -->
+
+        <a
+          href="manage.html"
+          class="bank-action-card"
+        >
+
+          <div class="bank-action-icon">
+            ⚙
+          </div>
+
+          <div>
+
+            <h3>
+              Manage account
+            </h3>
+
+            <p>
+              Profile, security and statements
+            </p>
+
+          </div>
+
+          <span class="action-arrow">
+            →
+          </span>
+
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         BANKING SERVICES
+    ========================== -->
+
+    <section class="bank-section">
+
+      <div class="bank-section-heading">
+
+        <div>
+
+          <p class="bank-eyebrow">
+            Services
+          </p>
+
+          <h2>
+            Banking at your fingertips
+          </h2>
+
         </div>
-      </a>
+
+      </div>
 
 
-      <a href="transactions.html" class="action-card">
-        <div class="title">View history</div>
-        <div class="desc">
-          See every credit and debit on record
+      <div class="bank-services-grid">
+
+        <!-- =========================
+     MOBILE PAYMENTS MODAL
+========================= -->
+
+<div
+  class="mobile-payment-modal"
+  id="mobile-payment-modal"
+  aria-hidden="true"
+>
+
+  <div class="mobile-payment-modal-overlay"></div>
+
+  <div
+    class="mobile-payment-modal-content"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="mobile-payment-modal-title"
+  >
+
+    <button
+      type="button"
+      class="mobile-payment-modal-close"
+      id="mobile-payment-modal-close"
+      aria-label="Close mobile payments"
+    >
+      ×
+    </button>
+
+    <p class="bank-eyebrow">
+      Mobile banking
+    </p>
+
+    <h2 id="mobile-payment-modal-title">
+      Mobile Recharge
+    </h2>
+
+    <p class="mobile-payment-description">
+      Recharge your mobile number quickly and securely.
+    </p>
+
+    <div class="mobile-payment-form-group">
+
+      <label for="mobile-recharge-number">
+        Mobile number
+      </label>
+
+      <input
+        type="tel"
+        id="mobile-recharge-number"
+        placeholder="Enter 10-digit mobile number"
+        inputmode="numeric"
+        maxlength="10"
+        required
+      />
+
+    </div>
+
+    <div class="mobile-payment-form-group">
+
+      <label for="mobile-recharge-operator">
+        Mobile operator
+      </label>
+
+      <select id="mobile-recharge-operator">
+
+        <option value="">
+          Select operator
+        </option>
+
+        <option value="Airtel">
+          Airtel
+        </option>
+
+        <option value="Jio">
+          Jio
+        </option>
+
+        <option value="Vi">
+          Vi
+        </option>
+
+        <option value="BSNL">
+          BSNL
+        </option>
+
+      </select>
+
+    </div>
+
+    <div class="mobile-payment-form-group">
+
+      <label for="mobile-recharge-amount">
+        Recharge amount
+      </label>
+
+      <div class="recharge-amount-wrapper">
+
+        <span>
+          $
+        </span>
+
+        <input
+          type="number"
+          id="mobile-recharge-amount"
+          placeholder="Enter amount"
+          min="1"
+          step="1"
+          required
+        />
+
+      </div>
+
+    </div>
+
+    <div class="recharge-quick-amounts">
+
+      <button
+        type="button"
+        class="recharge-amount-btn"
+        data-amount="10"
+      >
+        $10
+      </button>
+
+      <button
+        type="button"
+        class="recharge-amount-btn"
+        data-amount="20"
+      >
+        $20
+      </button>
+
+      <button
+        type="button"
+        class="recharge-amount-btn"
+        data-amount="30"
+      >
+        $30
+      </button>
+
+      <button
+        type="button"
+        class="recharge-amount-btn"
+        data-amount="50"
+      >
+        $50
+      </button>
+
+      <button
+        type="button"
+        class="recharge-amount-btn"
+        data-amount="100"
+      >
+        $100
+      </button>
+
+    </div>
+
+    <div
+      class="mobile-payment-message"
+      id="mobile-payment-message"
+      aria-live="polite"
+    ></div>
+
+    <div class="mobile-payment-summary">
+
+      <div>
+
+        <span>
+          Payment method
+        </span>
+
+        <strong>
+          Primary account
+        </strong>
+
+      </div>
+
+      <div>
+
+        <span>
+          Amount
+        </span>
+
+        <strong id="mobile-payment-summary-amount">
+          $0.00
+        </strong>
+
+      </div>
+
+    </div>
+
+    <button
+      type="button"
+      class="mobile-payment-submit"
+      id="mobile-payment-submit"
+    >
+      Recharge mobile
+    </button>
+
+    <p class="mobile-payment-demo-note">
+      Mobile recharge is simulated for this banking
+      demonstration and does not make a real payment.
+    </p>
+
+  </div>
+
+  </div>
+
+
+
+
+        <!-- =========================
+             BENEFICIARIES
+        ========================== -->
+
+        <div
+          class="bank-service-card beneficiary-service"
+          id="beneficiaries-service"
+          role="button"
+          tabindex="0"
+        >
+
+          <div class="service-icon">
+            👥
+          </div>
+
+          <h3>
+            Beneficiaries
+          </h3>
+
+          <p>
+            Manage your saved payment recipients.
+          </p>
+
+          <span class="service-action">
+            Manage beneficiaries →
+          </span>
+
         </div>
-      </a>
+       
+       <!-- =========================
+     NOTIFICATIONS MODAL
+========================= -->
+
+<div
+  class="notification-modal"
+  id="notification-modal"
+  aria-hidden="true"
+>
+
+  <div class="notification-modal-overlay"></div>
+
+  <div
+    class="notification-modal-content"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="notification-modal-title"
+  >
+
+    <button
+      type="button"
+      class="notification-modal-close"
+      id="notification-modal-close"
+      aria-label="Close notifications"
+    >
+      ×
+    </button>
+
+
+    <div class="notification-header">
+
+      <div>
+
+        <p class="bank-eyebrow">
+          Account activity
+        </p>
+
+        <h2 id="notification-modal-title">
+          Notifications
+        </h2>
+
+      </div>
+
+      <button
+        type="button"
+        class="notification-clear-btn"
+        id="notification-clear-btn"
+      >
+        Clear all
+      </button>
 
     </div>
 
 
-    <!-- Recent Activity -->
-    <section>
+    <p class="notification-description">
+      Important updates and activity from your Ledger account.
+    </p>
 
-      <h2 class="section-title">
-        Recent activity
-      </h2>
 
-      <p class="section-sub">
-        The last five entries on this account.
+    <!-- Notification List -->
+
+    <div
+      class="notification-list"
+      id="notification-list"
+    >
+
+      <!-- Notifications will be inserted by JavaScript -->
+
+    </div>
+
+
+    <!-- Empty State -->
+
+    <div
+      class="notification-empty"
+      id="notification-empty"
+      style="display: none;"
+    >
+
+      <div class="notification-empty-icon">
+        ✓
+      </div>
+
+      <h3>
+        You're all caught up
+      </h3>
+
+      <p>
+        There are no new notifications right now.
       </p>
 
-      <div class="ledger" id="recent-ledger">
+    </div>
 
-        <div class="empty-state">
-          Loading…
+
+    <p class="notification-demo-note">
+      Notifications shown here are part of this banking
+      application demonstration.
+    </p>
+
+  </div>
+
+</div>  
+        <!-- =========================
+             CARDS
+        ========================== -->
+
+        <div
+          class="bank-service-card bank-card-service"
+          id="cards-service"
+          role="button"
+          tabindex="0"
+        >
+
+          <div class="service-icon">
+            💳
+          </div>
+
+          <h3>
+            Cards
+          </h3>
+
+          <p>
+            Manage your debit and virtual cards.
+          </p>
+
+          <span class="service-action">
+            View card →
+          </span>
+
+        </div>
+
+
+        <!-- =========================
+             MOBILE PAYMENTS
+        ========================== -->
+
+        <div
+         class="bank-service-card mobile-payment-service"
+         id="mobile-payment-service"
+         role="button"
+         tabindex="0"
+     >
+       <div class="service-icon">
+        📱
+      </div>
+
+       <h3>
+        Mobile payments
+      </h3>
+
+      <p>
+       Recharge and manage mobile payments.
+     </p>
+
+     <span class="service-action">
+       Recharge mobile →
+     </span>
+    </div>
+
+
+        <!-- =========================
+             NOTIFICATIONS
+        ========================== -->
+
+        <div
+         class="bank-service-card notification-service"
+         id="notification-service"
+        role="button"
+        tabindex="0"
+>
+       <div class="service-icon">
+       🔔
+      </div>
+
+       <h3>
+        Notifications
+      </h3>
+
+      <p>
+       Stay updated about important account activity.
+     </p>
+
+      <span class="service-action">
+       View notifications →
+      </span>
+    </div>
+
+    <!-- =========================
+     BILL PAYMENTS MODAL
+========================= -->
+
+<div
+  class="bill-payment-modal"
+  id="bill-payment-modal"
+  aria-hidden="true"
+>
+
+  <div class="bill-payment-modal-overlay"></div>
+
+  <div
+    class="bill-payment-modal-content"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="bill-payment-modal-title"
+  >
+
+    <button
+      type="button"
+      class="bill-payment-modal-close"
+      id="bill-payment-modal-close"
+      aria-label="Close bill payments"
+    >
+      ×
+    </button>
+
+
+    <p class="bank-eyebrow">
+      Payments
+    </p>
+
+    <h2 id="bill-payment-modal-title">
+      Pay a Bill
+    </h2>
+
+    <p class="bill-payment-description">
+      Pay your household and utility bills securely from your Ledger account.
+    </p>
+
+
+    <!-- Bill Category -->
+
+    <div class="bill-payment-form-group">
+
+      <label for="bill-payment-category">
+        Bill category
+      </label>
+
+      <select id="bill-payment-category">
+
+        <option value="">
+          Select bill category
+        </option>
+
+        <option value="Electricity">
+          💡 Electricity
+        </option>
+
+        <option value="Internet">
+          🌐 Internet
+        </option>
+
+        <option value="DTH">
+          📺 DTH
+        </option>
+
+        <option value="Water">
+          💧 Water
+        </option>
+
+        <option value="Credit Card">
+          💳 Credit card
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <!-- Biller -->
+
+    <div class="bill-payment-form-group">
+
+      <label for="bill-payment-biller">
+        Biller / provider
+      </label>
+
+      <input
+        type="text"
+        id="bill-payment-biller"
+        placeholder="Enter provider name"
+        maxlength="60"
+      />
+
+    </div>
+
+
+    <!-- Customer Number -->
+
+    <div class="bill-payment-form-group">
+
+      <label for="bill-payment-customer">
+        Customer / bill number
+      </label>
+
+      <input
+        type="text"
+        id="bill-payment-customer"
+        placeholder="Enter customer or bill number"
+        maxlength="30"
+      />
+
+    </div>
+
+
+    <!-- Amount -->
+
+    <div class="bill-payment-form-group">
+
+      <label for="bill-payment-amount">
+        Payment amount
+      </label>
+
+      <div class="bill-amount-wrapper">
+
+        <span>
+          $
+        </span>
+
+        <input
+          type="number"
+          id="bill-payment-amount"
+          placeholder="Enter amount"
+          min="1"
+          step="0.01"
+        />
+
+      </div>
+
+    </div>
+
+
+    <!-- Quick Amounts -->
+
+    <div class="bill-quick-amounts">
+
+      <button
+        type="button"
+        class="bill-amount-btn"
+        data-amount="25"
+      >
+        $25
+      </button>
+
+      <button
+        type="button"
+        class="bill-amount-btn"
+        data-amount="50"
+      >
+        $50
+      </button>
+
+      <button
+        type="button"
+        class="bill-amount-btn"
+        data-amount="75"
+      >
+        $75
+      </button>
+
+      <button
+        type="button"
+        class="bill-amount-btn"
+        data-amount="100"
+      >
+        $100
+      </button>
+
+    </div>
+
+
+    <!-- Message -->
+
+    <div
+      class="bill-payment-message"
+      id="bill-payment-message"
+      aria-live="polite"
+    ></div>
+
+
+    <!-- Summary -->
+
+    <div class="bill-payment-summary">
+
+      <div>
+
+        <span>
+          Payment method
+        </span>
+
+        <strong>
+          Primary account
+        </strong>
+
+      </div>
+
+      <div>
+
+        <span>
+          Amount
+        </span>
+
+        <strong id="bill-payment-summary-amount">
+          $0.00
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <!-- Pay Button -->
+
+    <button
+      type="button"
+      class="bill-payment-submit"
+      id="bill-payment-submit"
+    >
+      Pay bill
+    </button>
+
+
+    <p class="bill-payment-demo-note">
+      Bill payments are simulated for this banking demonstration
+      and do not make real payments.
+    </p>
+
+  </div>
+
+</div>
+
+    <!-- =========================
+     BILL PAYMENTS
+========================= -->
+
+<div
+  class="bank-service-card bill-payment-service"
+  id="bill-payment-service"
+  role="button"
+  tabindex="0"
+>
+
+  <div class="service-icon">
+    🧾
+  </div>
+
+  <h3>
+    Bill payments
+  </h3>
+
+  <p>
+    Pay your utility and household bills easily.
+  </p>
+
+  <span class="service-action">
+    Pay a bill →
+  </span>
+
+</div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         RECENT TRANSACTIONS
+    ========================== -->
+
+    <section class="bank-section">
+
+      <div class="bank-section-heading">
+
+        <div>
+
+          <p class="bank-eyebrow">
+            Activity
+          </p>
+
+          <h2>
+            Recent transactions
+          </h2>
+
+          <p class="bank-section-description">
+            Your latest account activity.
+          </p>
+
+        </div>
+
+
+        <a
+          href="manage.html"
+          class="view-all-link"
+        >
+          View all →
+        </a>
+
+      </div>
+
+
+      <div
+        class="bank-transactions"
+        id="recent-ledger"
+      >
+
+        <div class="bank-loading">
+          Loading transactions…
         </div>
 
       </div>
 
     </section>
 
+
+    <!-- =========================
+         SECURITY
+    ========================== -->
+
+    <section class="bank-security-card">
+
+      <div class="security-large-icon">
+        ✓
+      </div>
+
+      <div>
+
+        <p class="bank-eyebrow">
+          Security
+        </p>
+
+        <h2>
+          Your account is protected
+        </h2>
+
+        <p>
+          Ledger uses secure authentication and protected
+          account sessions to help keep your banking information safe.
+        </p>
+
+      </div>
+
+      <a
+        href="manage.html"
+        class="security-link"
+      >
+        Security settings →
+      </a>
+
+    </section>
+
+
+    <!-- =========================
+         DIGITAL DEBIT CARD MODAL
+    ========================== -->
+
+    <div
+      class="card-modal"
+      id="card-modal"
+      aria-hidden="true"
+    >
+
+      <div class="card-modal-overlay"></div>
+
+      <div
+        class="card-modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="card-modal-title"
+      >
+
+        <button
+          type="button"
+          class="card-modal-close"
+          id="card-modal-close"
+          aria-label="Close card"
+        >
+          ×
+        </button>
+
+        <p class="bank-eyebrow">
+          Your card
+        </p>
+
+        <h2 id="card-modal-title">
+          Ledger Debit Card
+        </h2>
+
+        <div class="digital-card">
+
+          <div class="digital-card-top">
+
+            <strong>
+              Ledger<span>.</span>
+            </strong>
+
+            <span>
+              DEBIT
+            </span>
+
+          </div>
+
+          <div class="digital-card-chip">
+            ▦
+          </div>
+
+          <div class="digital-card-number">
+            •••• &nbsp; •••• &nbsp; •••• &nbsp; 4821
+          </div>
+
+          <div class="digital-card-bottom">
+
+            <div>
+
+              <small>
+                CARD HOLDER
+              </small>
+
+              <strong id="card-holder-name">
+                CARD HOLDER
+              </strong>
+
+            </div>
+
+            <div>
+
+              <small>
+                EXPIRES
+              </small>
+
+              <strong>
+                12/29
+              </strong>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="card-modal-info">
+
+          <div>
+
+            <span>
+              Card status
+            </span>
+
+            <strong>
+              Active
+            </strong>
+
+          </div>
+
+          <div>
+
+            <span>
+              Card type
+            </span>
+
+            <strong>
+              Debit
+            </strong>
+
+          </div>
+
+        </div>
+
+        <p class="card-demo-note">
+          This is a demonstration card. Card details are
+          simulated and cannot be used for real payments.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         BENEFICIARIES MODAL
+    ========================== -->
+
+    <div
+      class="beneficiary-modal"
+      id="beneficiary-modal"
+      aria-hidden="true"
+    >
+
+      <div class="beneficiary-modal-overlay"></div>
+
+      <div
+        class="beneficiary-modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="beneficiary-modal-title"
+      >
+
+        <button
+          type="button"
+          class="beneficiary-modal-close"
+          id="beneficiary-modal-close"
+          aria-label="Close beneficiaries"
+        >
+          ×
+        </button>
+
+
+        <p class="bank-eyebrow">
+          Payments
+        </p>
+
+        <h2 id="beneficiary-modal-title">
+          Beneficiaries
+        </h2>
+
+        <p class="beneficiary-modal-description">
+          Save trusted recipients for faster and easier transfers.
+        </p>
+
+
+        <!-- Beneficiary List -->
+
+        <div
+          class="beneficiary-list"
+          id="beneficiary-list"
+        >
+
+          <div class="beneficiary-empty">
+
+            <div class="beneficiary-empty-icon">
+              👥
+            </div>
+
+            <h3>
+              No beneficiaries yet
+            </h3>
+
+            <p>
+              Add a beneficiary to make future transfers faster.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <!-- Add Beneficiary -->
+
+        <div class="beneficiary-add-section">
+
+          <h3>
+            Add beneficiary
+          </h3>
+
+          <form id="beneficiary-form">
+
+            <div class="beneficiary-form-group">
+
+              <label for="beneficiary-name">
+                Full name
+              </label>
+
+              <input
+                type="text"
+                id="beneficiary-name"
+                name="beneficiaryName"
+                placeholder="Enter beneficiary name"
+                required
+              />
+
+            </div>
+
+
+            <div class="beneficiary-form-group">
+
+              <label for="beneficiary-account">
+                Account number
+              </label>
+
+              <input
+                type="text"
+                id="beneficiary-account"
+                name="beneficiaryAccount"
+                placeholder="Enter account number"
+                inputmode="numeric"
+                minlength="6"
+                maxlength="20"
+                required
+              />
+
+            </div>
+
+
+            <div class="beneficiary-form-group">
+
+              <label for="beneficiary-nickname">
+                Nickname
+                <span>
+                  Optional
+                </span>
+              </label>
+
+              <input
+                type="text"
+                id="beneficiary-nickname"
+                name="beneficiaryNickname"
+                placeholder="e.g. Family, Friend"
+                maxlength="30"
+              />
+
+            </div>
+
+
+            <div
+              class="beneficiary-message"
+              id="beneficiary-message"
+              aria-live="polite"
+            ></div>
+
+
+            <div class="beneficiary-form-actions">
+
+              <button
+                type="button"
+                class="beneficiary-cancel-btn"
+                id="beneficiary-cancel-btn"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="submit"
+                class="beneficiary-save-btn"
+              >
+                Save beneficiary
+              </button>
+
+            </div>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
   </main>
+
+
+  <!-- =========================
+       FOOTER
+  ========================== -->
+
+  <footer class="bank-footer">
+
+    <div class="bank-footer-logo">
+      Ledger<span>.</span>
+    </div>
+
+    <p>
+      © 2026 Ledger Bank. Digital banking demonstration.
+    </p>
+
+    <p>
+      Secure • Simple • Modern
+    </p>
+
+  </footer>
+
 
 </div>
 
+
+<!-- =========================
+     JAVASCRIPT
+========================== -->
 
 <script src="js/api.js"></script>
 <script src="js/dashboard.js"></script>
