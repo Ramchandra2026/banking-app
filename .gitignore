@@ -4,3 +4,7 @@ backend/db/bank.sqlite
 backend/db/bank.sqlite-shm
 backend/db/bank.sqlite-wal
 .DS_Store
+# Local backup files
+*.backup
+*.before-*
+*.balance-backup
