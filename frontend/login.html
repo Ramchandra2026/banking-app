@@ -1,54 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Sign in — Ledger</title>
-<link rel="stylesheet" href="css/style.css" />
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <meta
+    http-equiv="refresh"
+    content="0; url=auth.html"
+  />
+
+  <title>Sign In — Ledger Bank</title>
+
+  <script>
+    window.location.replace("auth.html");
+  </script>
 </head>
+
 <body>
+  <p>
+    Redirecting to Ledger Bank authentication...
+  </p>
 
-<div class="auth-shell">
-  <div class="auth-brand">
-    <div class="brand-mark">Ledger<span>.</span></div>
-    <blockquote>
-      Every entry, accounted for.<br />A clear record of where your money moves.
-    </blockquote>
-    <footer>&copy; 2026 Ledger Bank — demo application, not a real financial institution.</footer>
-  </div>
-
-  <div class="auth-form-wrap">
-    <form class="auth-form" id="login-form" novalidate>
-      <h1>Welcome back</h1>
-      <p class="lede">Sign in to view your accounts and recent activity.</p>
-
-      <div class="field">
-        <label for="email">Email address</label>
-        <input type="email" id="email" name="email" autocomplete="email" required />
-      </div>
-
-      <div class="field">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" autocomplete="current-password" required />
-      </div>
-
-      <div class="form-note" id="form-note"></div>
-
-      <button type="submit" class="btn-primary" id="submit-btn">Sign in</button>
-
-      <p class="auth-switch">
-        New to Ledger? <a href="register.html">Create an account</a>
-      </p>
-
-      <p class="demo-hint">
-        Demo credentials — email: <strong>demo@ledgerbank.test</strong>,
-        password: <strong>Demo@1234</strong> (after running the seed script).
-      </p>
-    </form>
-  </div>
-</div>
-
-<script src="js/api.js"></script>
-<script src="js/login.js"></script>
+  <p>
+    If you are not redirected automatically,
+    <a href="auth.html">click here to sign in</a>.
+  </p>
 </body>
 </html>
