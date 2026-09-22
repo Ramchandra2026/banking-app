@@ -1,781 +1,498 @@
 document.addEventListener("DOMContentLoaded", () => {
-
-  // =====================================================
-  // AUTO REDIRECT IF ALREADY LOGGED IN
-  // =====================================================
-
   if (Auth.getToken()) {
     window.location.href = "dashboard.html";
     return;
   }
 
+  const $ = (id) => document.getElementById(id);
 
-  // =====================================================
-  // SECTION SWITCHING
-  // =====================================================
+  function showSection(sectionId) {
+    ["login-section", "register-section", "forgot-section"].forEach((id) => {
+      const section = $(id);
+      if (section) section.classList.toggle("auth-hidden", id !== sectionId);
+    });
+  }
 
   window.showLogin = function () {
-
-    document
-      .getElementById("login-section")
-      .classList.remove("auth-hidden");
-
-    document
-      .getElementById("register-section")
-      .classList.add("auth-hidden");
-
-    document
-      .getElementById("forgot-section")
-      .classList.add("auth-hidden");
-
+    showSection("login-section");
   };
-
 
   window.showRegister = function () {
-
-    document
-      .getElementById("login-section")
-      .classList.add("auth-hidden");
-
-    document
-      .getElementById("register-section")
-      .classList.remove("auth-hidden");
-
-    document
-      .getElementById("forgot-section")
-      .classList.add("auth-hidden");
-
+    showSection("register-section");
+    resetRegistrationOTP();
   };
-
 
   window.showForgotPassword = function () {
-
-    document
-      .getElementById("login-section")
-      .classList.add("auth-hidden");
-
-    document
-      .getElementById("register-section")
-      .classList.add("auth-hidden");
-
-    document
-      .getElementById("forgot-section")
-      .classList.remove("auth-hidden");
-
+    showSection("forgot-section");
+    resetForgotPasswordFlow();
   };
-
-
-  // Keep both names available.
-  // This allows either onclick="showForgot()"
-  // or onclick="showForgotPassword()" to work.
 
   window.showForgot = function () {
     window.showForgotPassword();
   };
 
-
-  // =====================================================
-  // PASSWORD SHOW / HIDE
-  // =====================================================
-
   window.togglePassword = function (inputId, button) {
-
-    const input = document.getElementById(inputId);
-
+    const input = $(inputId);
     if (!input) return;
 
-    if (input.type === "password") {
-
-      input.type = "text";
-      button.textContent = "Hide";
-
-    } else {
-
-      input.type = "password";
-      button.textContent = "Show";
-
-    }
-
+    const showing = input.type === "password";
+    input.type = showing ? "text" : "password";
+    button.textContent = showing ? "Hide" : "Show";
   };
 
-
-  // =====================================================
-  // MESSAGE HELPER
-  // =====================================================
-
-  function showMessage(
-    elementId,
-    message,
-    isError = true
-  ) {
-
-    const element =
-      document.getElementById(elementId);
-
+  function showMessage(elementId, message, isError = true) {
+    const element = $(elementId);
     if (!element) return;
 
     element.textContent = message;
-
     element.className = "auth-message";
-
-    if (isError) {
-
-      element.classList.add("error");
-
-    } else {
-
-      element.classList.add("success");
-
-    }
-
+    element.classList.add(isError ? "error" : "success");
   }
 
+  function clearMessage(elementId) {
+    const element = $(elementId);
+    if (!element) return;
+    element.textContent = "";
+    element.className = "auth-message";
+  }
+
+  function setButtonBusy(button, busyText, busy = true) {
+    if (!button) return;
+    button.disabled = busy;
+    if (busy && busyText) button.textContent = busyText;
+  }
 
   // =====================================================
   // LOGIN
   // =====================================================
 
-  const loginForm =
-    document.getElementById("login-form");
+  const loginForm = $("login-form");
 
   if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearMessage("login-message");
 
-    loginForm.addEventListener(
-      "submit",
-      async (e) => {
+      const email = $("login-email").value.trim().toLowerCase();
+      const password = $("login-password").value;
+      const submitBtn = loginForm.querySelector(".auth-submit-btn");
 
-        e.preventDefault();
+      if (!email || !password) {
+        showMessage("login-message", "Email and password are required.");
+        return;
+      }
 
+      setButtonBusy(submitBtn, "Signing in…");
 
-        const email =
-          document
-            .getElementById("login-email")
-            .value
-            .trim()
-            .toLowerCase();
+      try {
+        const data = await apiRequest("/auth/login", {
+          method: "POST",
+          auth: false,
+          body: { email, password },
+        });
 
+        Auth.setSession(data.token, data.user);
+        showMessage("login-message", "Login successful. Redirecting…", false);
 
-        const password =
-          document
-            .getElementById("login-password")
-            .value;
-
-
-        if (!email || !password) {
-
-          showMessage(
-            "login-message",
-            "Email and password are required."
-          );
-
-          return;
-        }
-
-
-        const submitBtn =
-          loginForm.querySelector(
-            ".auth-submit-btn"
-          );
-
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Signing in…";
-
-
-        try {
-
-          const data =
-            await apiRequest(
-              "/auth/login",
-              {
-                method: "POST",
-                auth: false,
-                body: {
-                  email,
-                  password
-                }
-              }
-            );
-
-
-          Auth.setSession(
-            data.token,
-            data.user
-          );
-
-
-          showMessage(
-            "login-message",
-            "Login successful. Redirecting…",
-            false
-          );
-
-
-          setTimeout(() => {
-
-            window.location.href =
-              "dashboard.html";
-
-          }, 500);
-
-
-        } catch (err) {
-
-          console.error(
-            "Login error:",
-            err
-          );
-
-          showMessage(
-            "login-message",
-            err.message ||
-            "Unable to sign in."
-          );
-
-        } finally {
-
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 500);
+      } catch (err) {
+        showMessage("login-message", err.message || "Unable to sign in.");
+      } finally {
+        if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.textContent = "Sign In";
-
         }
-
       }
-    );
-
+    });
   }
 
-
   // =====================================================
-  // REGISTER + OTP
+  // REGISTRATION + INLINE OTP
   // =====================================================
 
-  const registerForm =
-    document.getElementById("register-form");
+  const registerForm = $("register-form");
+  const registerSubmitBtn = registerForm
+    ? registerForm.querySelector(".auth-submit-btn")
+    : null;
+  const registerOtpPanel = $("register-otp-panel");
+  const verifyRegisterOtpBtn = $("verify-register-otp");
+  const resendRegisterOtpBtn = $("resend-register-otp");
+
+  let registrationOTP = null;
+
+  function resetRegistrationOTP() {
+    registrationOTP = null;
+    if (registerOtpPanel) registerOtpPanel.classList.add("auth-hidden");
+    if (registerSubmitBtn) registerSubmitBtn.classList.remove("auth-hidden");
+    if ($("register-otp")) $("register-otp").value = "";
+    if ($("register-otp-demo")) $("register-otp-demo").textContent = "";
+    if ($("register-otp-recipient")) $("register-otp-recipient").textContent = "";
+    sessionStorage.removeItem("pendingRegistration");
+  }
+
+  async function sendRegistrationOTP({ showPanel = true } = {}) {
+    const mobile = $("register-mobile").value.trim();
+    const cleanedMobile = mobile.replace(/\D/g, "").slice(-10);
+
+    if (!/^[6-9]\d{9}$/.test(cleanedMobile)) {
+      showMessage("register-message", "Please enter a valid 10-digit mobile number.");
+      return false;
+    }
+
+    try {
+      const otpData = await apiRequest("/auth/send-otp", {
+        method: "POST",
+        auth: false,
+        body: { mobile: cleanedMobile },
+      });
+
+      registrationOTP = otpData.demoOtp;
+
+      if (showPanel && registerOtpPanel) {
+        registerOtpPanel.classList.remove("auth-hidden");
+        $("register-otp-recipient").textContent = `OTP sent to ${cleanedMobile}.`;
+        $("register-otp-demo").textContent = `Demo OTP: ${otpData.demoOtp}`;
+        if (registerSubmitBtn) registerSubmitBtn.classList.add("auth-hidden");
+        $("register-otp").focus();
+      }
+
+      return true;
+    } catch (err) {
+      showMessage("register-message", err.message || "Unable to send OTP.");
+      return false;
+    }
+  }
 
   if (registerForm) {
-
-    registerForm.addEventListener(
-      "submit",
-      async (e) => {
-
-        e.preventDefault();
-
-
-        const name =
-          document
-            .getElementById("register-name")
-            .value
-            .trim();
-
-
-        const email =
-          document
-            .getElementById("register-email")
-            .value
-            .trim()
-            .toLowerCase();
-
-
-        const mobile =
-          document
-            .getElementById("register-mobile")
-            .value
-            .trim();
-
-
-        const password =
-          document
-            .getElementById("register-password")
-            .value;
-
-
-        const confirmPassword =
-          document
-            .getElementById(
-              "register-confirm-password"
-            )
-            .value;
-
-
-        // -----------------------------
-        // VALIDATION
-        // -----------------------------
-
-        if (
-          !name ||
-          !email ||
-          !mobile ||
-          !password ||
-          !confirmPassword
-        ) {
-
-          showMessage(
-            "register-message",
-            "Please fill in all fields."
-          );
-
-          return;
-        }
-
-
-        if (password.length < 6) {
-
-          showMessage(
-            "register-message",
-            "Password must contain at least 6 characters."
-          );
-
-          return;
-        }
-
-
-        if (password !== confirmPassword) {
-
-          showMessage(
-            "register-message",
-            "Passwords do not match."
-          );
-
-          return;
-        }
-
-
-        const cleanedMobile =
-          mobile
-            .replace(/\D/g, "")
-            .slice(-10);
-
-
-        if (
-          !/^[6-9]\d{9}$/.test(
-            cleanedMobile
-          )
-        ) {
-
-          showMessage(
-            "register-message",
-            "Please enter a valid 10-digit mobile number."
-          );
-
-          return;
-        }
-
-
-        const submitBtn =
-          registerForm.querySelector(
-            ".auth-submit-btn"
-          );
-
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Sending OTP…";
-
-
-        try {
-
-          // -----------------------------
-          // SEND OTP
-          // -----------------------------
-
-          const otpData =
-            await apiRequest(
-              "/auth/send-otp",
-              {
-                method: "POST",
-                auth: false,
-                body: {
-                  mobile: cleanedMobile
-                }
-              }
-            );
-
-
-          console.log(
-            "DEMO REGISTRATION OTP:",
-            otpData.demoOtp
-          );
-
-
-          // Store registration temporarily
-
-          sessionStorage.setItem(
-            "pendingRegistration",
-            JSON.stringify({
-              name,
-              email,
-              mobile: cleanedMobile,
-              password
-            })
-          );
-
-
-          // -----------------------------
-          // ASK FOR OTP
-          // -----------------------------
-
-          const enteredOTP =
-            prompt(
-              `OTP sent to ${cleanedMobile}.\n\n` +
-              `Demo OTP: ${otpData.demoOtp}\n\n` +
-              `Enter the OTP:`
-            );
-
-
-          if (!enteredOTP) {
-
-            showMessage(
-              "register-message",
-              "OTP verification cancelled."
-            );
-
-            return;
-          }
-
-
-          submitBtn.textContent =
-            "Verifying OTP…";
-
-
-          // -----------------------------
-          // VERIFY OTP
-          // -----------------------------
-
-          await apiRequest(
-            "/auth/verify-otp",
-            {
-              method: "POST",
-              auth: false,
-              body: {
-                mobile: cleanedMobile,
-                otp: enteredOTP.trim()
-              }
-            }
-          );
-
-
-          // -----------------------------
-          // CREATE ACCOUNT
-          // -----------------------------
-
-          submitBtn.textContent =
-            "Creating account…";
-
-
-          await apiRequest(
-            "/auth/register",
-            {
-              method: "POST",
-              auth: false,
-              body: {
-                fullName: name,
-                email,
-                password
-              }
-            }
-          );
-
-
-          sessionStorage.removeItem(
-            "pendingRegistration"
-          );
-
-
-          showMessage(
-            "register-message",
-            "OTP verified. Account created successfully. Please sign in.",
-            false
-          );
-
-
-          registerForm.reset();
-
-
-          setTimeout(() => {
-
-            showLogin();
-
-            const loginEmail =
-              document.getElementById(
-                "login-email"
-              );
-
-            if (loginEmail) {
-              loginEmail.value = email;
-            }
-
-          }, 1000);
-
-
-        } catch (err) {
-
-          console.error(
-            "Registration / OTP error:",
-            err
-          );
-
-          showMessage(
-            "register-message",
-            err.message ||
-            "Unable to complete registration."
-          );
-
-        } finally {
-
-          submitBtn.disabled = false;
-
-          submitBtn.textContent =
-            "Create Account";
-
-        }
-
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearMessage("register-message");
+
+      const name = $("register-name").value.trim();
+      const email = $("register-email").value.trim().toLowerCase();
+      const mobile = $("register-mobile").value.trim();
+      const password = $("register-password").value;
+      const confirmPassword = $("register-confirm-password").value;
+
+      if (!name || !email || !mobile || !password || !confirmPassword) {
+        showMessage("register-message", "Please fill in all fields.");
+        return;
       }
-    );
 
+      if (password.length < 6) {
+        showMessage("register-message", "Password must contain at least 6 characters.");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        showMessage("register-message", "Passwords do not match.");
+        return;
+      }
+
+      const cleanedMobile = mobile.replace(/\D/g, "").slice(-10);
+
+      if (!/^[6-9]\d{9}$/.test(cleanedMobile)) {
+        showMessage("register-message", "Please enter a valid 10-digit mobile number.");
+        return;
+      }
+
+      const submitBtn = registerForm.querySelector(".auth-submit-btn");
+      setButtonBusy(submitBtn, "Sending OTP…");
+
+      try {
+        sessionStorage.setItem(
+          "pendingRegistration",
+          JSON.stringify({
+            name,
+            email,
+            mobile: cleanedMobile,
+            password,
+          })
+        );
+
+        const sent = await sendRegistrationOTP();
+        if (!sent) {
+          sessionStorage.removeItem("pendingRegistration");
+          return;
+        }
+
+        showMessage(
+          "register-message",
+          "OTP sent. Enter the code below to verify your mobile number.",
+          false
+        );
+      } catch (err) {
+        showMessage("register-message", err.message || "Unable to start registration.");
+        sessionStorage.removeItem("pendingRegistration");
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Create Account";
+        }
+      }
+    });
   }
 
+  if (resendRegisterOtpBtn) {
+    resendRegisterOtpBtn.addEventListener("click", async () => {
+      resendRegisterOtpBtn.disabled = true;
+      resendRegisterOtpBtn.textContent = "Sending…";
+      try {
+        await sendRegistrationOTP();
+      } finally {
+        resendRegisterOtpBtn.disabled = false;
+        resendRegisterOtpBtn.textContent = "Resend OTP";
+      }
+    });
+  }
+
+  if (verifyRegisterOtpBtn) {
+    verifyRegisterOtpBtn.addEventListener("click", async () => {
+      const pending = sessionStorage.getItem("pendingRegistration");
+      const otp = $("register-otp").value.trim();
+
+      if (!pending) {
+        showMessage("register-message", "Registration session expired. Please start again.");
+        resetRegistrationOTP();
+        return;
+      }
+
+      if (!/^\d{6}$/.test(otp)) {
+        showMessage("register-message", "Please enter the 6-digit OTP.");
+        $("register-otp").focus();
+        return;
+      }
+
+      setButtonBusy(verifyRegisterOtpBtn, "Verifying…");
+
+      try {
+        const registration = JSON.parse(pending);
+
+        await apiRequest("/auth/verify-otp", {
+          method: "POST",
+          auth: false,
+          body: {
+            mobile: registration.mobile,
+            otp,
+          },
+        });
+
+        setButtonBusy(verifyRegisterOtpBtn, "Creating account…");
+
+        const data = await apiRequest("/auth/register", {
+          method: "POST",
+          auth: false,
+          body: {
+            fullName: registration.name,
+            email: registration.email,
+            password: registration.password,
+          },
+        });
+
+        sessionStorage.removeItem("pendingRegistration");
+        registrationOTP = null;
+
+        if (registerOtpPanel) registerOtpPanel.classList.add("auth-hidden");
+
+        showMessage(
+          "register-message",
+          "OTP verified. Account created successfully. Please sign in.",
+          false
+        );
+
+        registerForm.reset();
+
+        setTimeout(() => {
+          showLogin();
+          if ($("login-email")) $("login-email").value = registration.email;
+        }, 700);
+      } catch (err) {
+        showMessage("register-message", err.message || "Unable to complete registration.");
+      } finally {
+        verifyRegisterOtpBtn.disabled = false;
+        verifyRegisterOtpBtn.textContent = "Verify OTP";
+      }
+    });
+  }
 
   // =====================================================
-  // FORGOT PASSWORD
+  // FORGOT PASSWORD + INLINE OTP
   // =====================================================
 
-  const forgotForm =
-    document.getElementById("forgot-form");
+  const forgotForm = $("forgot-form");
+  const forgotOtpPanel = $("forgot-otp-panel");
+  const resetPasswordPanel = $("reset-password-panel");
+  const forgotSubmitBtn = $("forgot-submit-btn");
+  const verifyForgotOtpBtn = $("verify-forgot-otp");
+  const resetPasswordBtn = $("reset-password-btn");
+
+  let resetEmail = "";
+  let resetOTP = "";
+
+  function resetForgotPasswordFlow() {
+    resetEmail = "";
+    resetOTP = "";
+
+    if (forgotOtpPanel) forgotOtpPanel.classList.add("auth-hidden");
+    if (resetPasswordPanel) resetPasswordPanel.classList.add("auth-hidden");
+
+    if ($("forgot-otp")) $("forgot-otp").value = "";
+    if ($("reset-password")) $("reset-password").value = "";
+    if ($("reset-confirm-password")) $("reset-confirm-password").value = "";
+    if ($("forgot-otp-demo")) $("forgot-otp-demo").textContent = "";
+    if ($("forgot-otp-recipient")) $("forgot-otp-recipient").textContent = "";
+
+    clearMessage("forgot-message");
+
+    if (forgotSubmitBtn) {
+      forgotSubmitBtn.classList.remove("auth-hidden");
+      forgotSubmitBtn.disabled = false;
+      forgotSubmitBtn.textContent = "Send OTP";
+    }
+  }
 
   if (forgotForm) {
-
-    forgotForm.addEventListener(
-      "submit",
-      async (e) => {
-
-        e.preventDefault();
-
-
-        const emailInput =
-          document.getElementById(
-            "forgot-email"
-          );
-
-
-        const email =
-          emailInput
-            ? emailInput.value.trim().toLowerCase()
-            : "";
-
-
-        if (!email) {
-
-          showMessage(
-            "forgot-message",
-            "Please enter your email address."
-          );
-
-          return;
-        }
-
-
-        const submitBtn =
-          forgotForm.querySelector(
-            ".auth-submit-btn"
-          );
-
-
-        if (submitBtn) {
-          submitBtn.disabled = true;
-          submitBtn.textContent =
-            "Sending OTP…";
-        }
-
-
-        try {
-
-          // -----------------------------
-          // SEND RESET OTP
-          // -----------------------------
-
-          const data =
-            await apiRequest(
-              "/auth/forgot-password",
-              {
-                method: "POST",
-                auth: false,
-                body: {
-                  email
-                }
-              }
-            );
-
-
-          console.log(
-            "DEMO PASSWORD RESET OTP:",
-            data.demoOtp
-          );
-
-
-          // -----------------------------
-          // ENTER OTP
-          // -----------------------------
-
-          const otp =
-            prompt(
-              `Password reset OTP sent.\n\n` +
-              `Demo OTP: ${data.demoOtp}\n\n` +
-              `Enter the OTP:`
-            );
-
-
-          if (!otp) {
-            return;
-          }
-
-
-          // -----------------------------
-          // VERIFY RESET OTP
-          // -----------------------------
-
-          const verifyData =
-            await apiRequest(
-              "/auth/verify-reset-otp",
-              {
-                method: "POST",
-                auth: false,
-                body: {
-                  email,
-                  otp: otp.trim()
-                }
-              }
-            );
-
-
-          if (!verifyData.verified) {
-
-            throw new Error(
-              "OTP verification failed."
-            );
-
-          }
-
-
-          // -----------------------------
-          // NEW PASSWORD
-          // -----------------------------
-
-          const newPassword =
-            prompt(
-              "Enter your new password (minimum 6 characters):"
-            );
-
-
-          if (!newPassword) {
-            return;
-          }
-
-
-          if (newPassword.length < 6) {
-
-            alert(
-              "Password must contain at least 6 characters."
-            );
-
-            return;
-          }
-
-
-          const confirmPassword =
-            prompt(
-              "Confirm your new password:"
-            );
-
-
-          if (!confirmPassword) {
-            return;
-          }
-
-
-          if (
-            newPassword !==
-            confirmPassword
-          ) {
-
-            alert(
-              "Passwords do not match."
-            );
-
-            return;
-          }
-
-
-          // -----------------------------
-          // RESET PASSWORD
-          // -----------------------------
-
-          await apiRequest(
-            "/auth/reset-password",
-            {
-              method: "PUT",
-              auth: false,
-              body: {
-                email,
-                otp: otp.trim(),
-                newPassword
-              }
-            }
-          );
-
-
-          alert(
-            "Password reset successfully. Please sign in with your new password."
-          );
-
-
-          forgotForm.reset();
-
-          showLogin();
-
-
-          const loginEmail =
-            document.getElementById(
-              "login-email"
-            );
-
-          if (loginEmail) {
-            loginEmail.value = email;
-          }
-
-
-        } catch (err) {
-
-          console.error(
-            "Password reset error:",
-            err
-          );
-
-          alert(
-            err.message ||
-            "Password reset failed."
-          );
-
-        } finally {
-
-          if (submitBtn) {
-
-            submitBtn.disabled = false;
-            submitBtn.textContent =
-              "Continue";
-
-          }
-
-        }
-
+    forgotForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      clearMessage("forgot-message");
+
+      resetEmail = $("forgot-email").value.trim().toLowerCase();
+
+      if (!resetEmail) {
+        showMessage("forgot-message", "Please enter your email address.");
+        return;
       }
-    );
 
+      setButtonBusy(forgotSubmitBtn, "Sending OTP…");
+
+      try {
+        const data = await apiRequest("/auth/forgot-password", {
+          method: "POST",
+          auth: false,
+          body: { email: resetEmail },
+        });
+
+        if (forgotOtpPanel) forgotOtpPanel.classList.remove("auth-hidden");
+        if ($("forgot-otp-recipient")) {
+          $("forgot-otp-recipient").textContent = `OTP sent for ${resetEmail}.`;
+        }
+        if ($("forgot-otp-demo")) {
+          $("forgot-otp-demo").textContent = `Demo OTP: ${data.demoOtp}`;
+        }
+
+        showMessage("forgot-message", "OTP sent. Enter the code below.", false);
+
+        forgotSubmitBtn.classList.add("auth-hidden");
+        $("forgot-otp").focus();
+      } catch (err) {
+        showMessage("forgot-message", err.message || "Unable to send reset OTP.");
+        forgotSubmitBtn.disabled = false;
+        forgotSubmitBtn.textContent = "Send OTP";
+      }
+    });
   }
 
+  if (verifyForgotOtpBtn) {
+    verifyForgotOtpBtn.addEventListener("click", async () => {
+      const otp = $("forgot-otp").value.trim();
 
-  // =====================================================
-  // START ON LOGIN
-  // =====================================================
+      if (!resetEmail) {
+        showMessage("forgot-message", "Please request a new OTP first.");
+        return;
+      }
+
+      if (!/^\d{6}$/.test(otp)) {
+        showMessage("forgot-message", "Please enter the 6-digit OTP.");
+        $("forgot-otp").focus();
+        return;
+      }
+
+      setButtonBusy(verifyForgotOtpBtn, "Verifying…");
+
+      try {
+        const result = await apiRequest("/auth/verify-reset-otp", {
+          method: "POST",
+          auth: false,
+          body: {
+            email: resetEmail,
+            otp,
+          },
+        });
+
+        if (!result.verified) {
+          throw new Error("OTP verification failed.");
+        }
+
+        resetOTP = otp;
+
+        if (forgotOtpPanel) forgotOtpPanel.classList.add("auth-hidden");
+        if (resetPasswordPanel) resetPasswordPanel.classList.remove("auth-hidden");
+
+        showMessage("forgot-message", "OTP verified. Create your new password.", false);
+        $("reset-password").focus();
+      } catch (err) {
+        showMessage("forgot-message", err.message || "OTP verification failed.");
+      } finally {
+        verifyForgotOtpBtn.disabled = false;
+        verifyForgotOtpBtn.textContent = "Verify OTP";
+      }
+    });
+  }
+
+  if (resetPasswordBtn) {
+    resetPasswordBtn.addEventListener("click", async () => {
+      const newPassword = $("reset-password").value;
+      const confirmPassword = $("reset-confirm-password").value;
+
+      if (newPassword.length < 6) {
+        showMessage("forgot-message", "New password must contain at least 6 characters.");
+        $("reset-password").focus();
+        return;
+      }
+
+      if (newPassword !== confirmPassword) {
+        showMessage("forgot-message", "Passwords do not match.");
+        $("reset-confirm-password").focus();
+        return;
+      }
+
+      setButtonBusy(resetPasswordBtn, "Resetting…");
+
+      try {
+        await apiRequest("/auth/reset-password", {
+          method: "PUT",
+          auth: false,
+          body: {
+            email: resetEmail,
+            otp: resetOTP,
+            newPassword,
+          },
+        });
+
+        showMessage(
+          "forgot-message",
+          "Password reset successfully. Please sign in with your new password.",
+          false
+        );
+
+        const completedEmail = resetEmail;
+
+        forgotForm.reset();
+        resetForgotPasswordFlow();
+
+        showLogin();
+
+        if ($("login-email")) $("login-email").value = completedEmail;
+      } catch (err) {
+        showMessage("forgot-message", err.message || "Password reset failed.");
+      } finally {
+        resetPasswordBtn.disabled = false;
+        resetPasswordBtn.textContent = "Reset password";
+      }
+    });
+  }
 
   showLogin();
-
 });

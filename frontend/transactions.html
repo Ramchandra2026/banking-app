@@ -42,6 +42,8 @@
         Dashboard
       </a>
 
+      <a href="features.html">Features</a>
+
       <a href="manage.html">
         Manage
       </a>
@@ -146,6 +148,25 @@
 
           <div class="payment-field">
 
+            <label for="transferBeneficiary">
+              Saved beneficiary
+              <span>(optional)</span>
+            </label>
+
+            <select id="transferBeneficiary">
+              <option value="">Enter account number manually</option>
+            </select>
+
+            <p
+              id="transfer-beneficiary-details"
+              class="deposit-info"
+              aria-live="polite"
+            ></p>
+
+          </div>
+
+          <div class="payment-field">
+
             <label for="toAccountNumber">
               Recipient account number
             </label>
@@ -167,7 +188,7 @@
           <div class="payment-field">
 
             <label for="transferAmount">
-              Amount (USD)
+              Amount (INR)
             </label>
 
             <input
@@ -304,7 +325,7 @@
           <div class="payment-field">
 
             <label for="depositAmount">
-              Amount (USD)
+              Amount (INR)
             </label>
 
             <input
@@ -440,8 +461,9 @@
               <input
                 type="text"
                 id="upiId"
-                placeholder="example@upi"
+                placeholder="Enter UPI ID (e.g. name@upi)"
                 autocomplete="off"
+                aria-describedby="deposit-note"
               />
 
             </div>

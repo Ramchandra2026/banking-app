@@ -1,5 +1,5 @@
 // Base URL of the backend API. Change this if your backend runs elsewhere.
-const API_BASE = "http://localhost:4000/api";
+const API_BASE = (window.LEDGER_API_BASE || "http://localhost:4000/api").replace(/\/$/, "");
 
 const Auth = {
   getToken() {
@@ -52,7 +52,10 @@ async function apiRequest(path, { method = "GET", body, auth = true } = {}) {
 }
 
 function formatCurrency(amount) {
-  return amount.toLocaleString("en-US", { style: "currency", currency: "USD" });
+  return Number(amount || 0).toLocaleString("en-IN", {
+    style: "currency",
+    currency: "INR",
+  });
 }
 
 function formatDate(isoLike) {

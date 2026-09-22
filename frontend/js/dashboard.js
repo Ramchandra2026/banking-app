@@ -41,22 +41,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // -----------------------------
-    // BALANCE
-    // -----------------------------
-
-    document.getElementById("balance-amount").textContent =
-      formatCurrency(primary.balance);
-
-
-    // -----------------------------
     // FULL ACCOUNT NUMBER
     // -----------------------------
 
     const accountNumberElement =
       document.getElementById("account-number");
 
+    const maskedAccountNumber = String(primary.accountNumber || "").slice(-4);
+
     accountNumberElement.textContent =
-      `Account No. ${primary.accountNumber}`;
+      maskedAccountNumber
+        ? `•••• ${maskedAccountNumber}`
+        : "••••";
 
 
     // -----------------------------
@@ -131,10 +127,40 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    document.getElementById("recent-ledger").innerHTML =
-      `<div class="empty-state">${err.message}</div>`;
+    const ledger = document.getElementById("recent-ledger");
+    const message = document.createElement("div");
+    message.className = "empty-state";
+    message.textContent = err.message || "Unable to load account activity.";
+    ledger.replaceChildren(message);
   }
 });
+
+function escapeDashboardHTML(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function showDashboardModal(modal, opener) {
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+  modal._lastFocusedElement = opener instanceof HTMLElement ? opener : null;
+
+  const closeButton = modal.querySelector('[aria-label^="Close"]');
+  if (closeButton) requestAnimationFrame(() => closeButton.focus());
+}
+
+function hideDashboardModal(modal) {
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+
+  if (modal._lastFocusedElement && document.contains(modal._lastFocusedElement)) {
+    modal._lastFocusedElement.focus();
+  }
+}
 
 
 function renderLedger(entries) {
@@ -174,24 +200,26 @@ function renderLedger(entries) {
       const counterparty =
         entry.counterpartyAccount
           ? `<span class="counterparty">
-               Acct •• ${entry.counterpartyAccount.slice(-4)}
+               Acct •• ${escapeDashboardHTML(entry.counterpartyAccount.slice(-4))}
              </span>`
           : "";
+
+      const direction = entry.direction === "credit" ? "credit" : "debit";
 
       return `
         <div class="ledger-row">
 
           <div class="date">
-            ${formatDate(entry.createdAt)}
+            ${escapeDashboardHTML(formatDate(entry.createdAt))}
           </div>
 
           <div class="desc">
             ${label}
-            ${entry.note ? `— ${entry.note}` : ""}
+            ${entry.note ? `— ${escapeDashboardHTML(entry.note)}` : ""}
             ${counterparty}
           </div>
 
-          <div class="amount ${entry.direction}">
+          <div class="amount ${direction}">
             ${sign} ${formatCurrency(entry.amount)}
           </div>
 
@@ -255,13 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================
 
   function openCard() {
-
-    cardModal.classList.add("open");
-
-    cardModal.setAttribute(
-      "aria-hidden",
-      "false"
-    );
+    showDashboardModal(cardModal, document.activeElement);
 
   }
 
@@ -271,13 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================
 
   function closeCard() {
-
-    cardModal.classList.remove("open");
-
-    cardModal.setAttribute(
-      "aria-hidden",
-      "true"
-    );
+    hideDashboardModal(cardModal);
 
   }
 
@@ -406,6 +422,14 @@ document.addEventListener("DOMContentLoaded", () => {
       "beneficiary-message"
     );
 
+  const beneficiarySaveBtn =
+    document.getElementById("beneficiary-save-btn");
+
+  const beneficiaryFormTitle =
+    document.getElementById("beneficiary-form-title");
+
+  let editingBeneficiaryId = null;
+
 
   // If the elements don't exist,
   // stop safely.
@@ -423,45 +447,23 @@ document.addEventListener("DOMContentLoaded", () => {
   // STORAGE
   // =========================================
 
-  const STORAGE_KEY =
-    "ledger_beneficiaries";
-
-
-  function getBeneficiaries() {
-
-    try {
-
-      return JSON.parse(
-        localStorage.getItem(
-          STORAGE_KEY
-        )
-      ) || [];
-
-    } catch (error) {
-
-      console.error(
-        "Unable to read beneficiaries:",
-        error
-      );
-
-      return [];
-
-    }
-
+  async function getBeneficiaries() {
+    const response = await apiRequest("/beneficiaries");
+    return response.beneficiaries || [];
   }
 
 
-  function saveBeneficiaries(
-    beneficiaries
-  ) {
+  function resetBeneficiaryForm() {
+    editingBeneficiaryId = null;
+    beneficiaryForm.reset();
 
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(
-        beneficiaries
-      )
-    );
+    if (beneficiaryFormTitle) {
+      beneficiaryFormTitle.textContent = "Add beneficiary";
+    }
 
+    if (beneficiarySaveBtn) {
+      beneficiarySaveBtn.textContent = "Save beneficiary";
+    }
   }
 
 
@@ -469,18 +471,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // OPEN MODAL
   // =========================================
 
-  function openBeneficiaryModal() {
+  async function openBeneficiaryModal() {
+    showDashboardModal(beneficiaryModal, document.activeElement);
 
-    beneficiaryModal.classList.add(
-      "open"
-    );
-
-    beneficiaryModal.setAttribute(
-      "aria-hidden",
-      "false"
-    );
-
-    renderBeneficiaries();
+    await renderBeneficiaries();
 
   }
 
@@ -490,17 +484,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================
 
   function closeBeneficiaryModal() {
+    hideDashboardModal(beneficiaryModal);
 
-    beneficiaryModal.classList.remove(
-      "open"
-    );
-
-    beneficiaryModal.setAttribute(
-      "aria-hidden",
-      "true"
-    );
-
-    beneficiaryForm.reset();
+    resetBeneficiaryForm();
 
     if (beneficiaryMessage) {
 
@@ -654,7 +640,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   beneficiaryForm.addEventListener(
     "submit",
-    (event) => {
+    async (event) => {
 
       event.preventDefault();
 
@@ -738,76 +724,22 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
 
-      // Get current beneficiaries
+      try {
+        const path = editingBeneficiaryId
+          ? `/beneficiaries/${editingBeneficiaryId}`
+          : "/beneficiaries";
 
-      const beneficiaries =
-        getBeneficiaries();
+        const response = await apiRequest(path, {
+          method: editingBeneficiaryId ? "PUT" : "POST",
+          body: { name, accountNumber, nickname },
+        });
 
-
-      // Prevent duplicate account numbers
-
-      const alreadyExists =
-        beneficiaries.some(
-          (beneficiary) =>
-            beneficiary.accountNumber ===
-            accountNumber
-        );
-
-
-      if (alreadyExists) {
-
-        showBeneficiaryMessage(
-          "This account is already saved.",
-          "error"
-        );
-
-        return;
-
+        resetBeneficiaryForm();
+        showBeneficiaryMessage(response.message, "success");
+        await renderBeneficiaries();
+      } catch (error) {
+        showBeneficiaryMessage(error.message, "error");
       }
-
-
-      // Create beneficiary
-
-      const beneficiary = {
-
-        id:
-          Date.now(),
-
-        name:
-          name,
-
-        accountNumber:
-          accountNumber,
-
-        nickname:
-          nickname,
-
-        createdAt:
-          new Date().toISOString()
-
-      };
-
-
-      beneficiaries.unshift(
-        beneficiary
-      );
-
-
-      saveBeneficiaries(
-        beneficiaries
-      );
-
-
-      beneficiaryForm.reset();
-
-
-      showBeneficiaryMessage(
-        "Beneficiary saved successfully.",
-        "success"
-      );
-
-
-      renderBeneficiaries();
 
     }
   );
@@ -817,15 +749,22 @@ document.addEventListener("DOMContentLoaded", () => {
   // RENDER BENEFICIARIES
   // =========================================
 
-  function renderBeneficiaries() {
+  async function renderBeneficiaries() {
 
     if (!beneficiaryList) {
       return;
     }
 
 
-    const beneficiaries =
-      getBeneficiaries();
+    let beneficiaries;
+
+    try {
+      beneficiaries = await getBeneficiaries();
+    } catch (error) {
+      beneficiaryList.innerHTML = "";
+      showBeneficiaryMessage(error.message, "error");
+      return;
+    }
 
 
     // Empty state
@@ -885,8 +824,8 @@ document.addEventListener("DOMContentLoaded", () => {
               >
 
                 <div class="beneficiary-avatar">
-                  ${getInitials(
-                    beneficiary.name
+                  ${escapeBeneficiaryHTML(
+                    getInitials(beneficiary.name)
                   )}
                 </div>
 
@@ -916,6 +855,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 <button
                   type="button"
+                  class="beneficiary-edit-btn"
+                  data-id="${beneficiary.id}"
+                >
+                  Edit
+                </button>
+
+                <button
+                  type="button"
                   class="beneficiary-delete-btn"
                   data-id="${beneficiary.id}"
                 >
@@ -929,6 +876,26 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         )
         .join("");
+
+
+    document
+      .querySelectorAll(
+        ".beneficiary-edit-btn"
+      )
+      .forEach(
+        (button) => {
+          button.addEventListener(
+            "click",
+            () => {
+              const beneficiary = beneficiaries.find(
+                (item) => item.id === Number(button.dataset.id)
+              );
+
+              if (beneficiary) editBeneficiary(beneficiary);
+            }
+          );
+        }
+      );
 
 
     // Attach remove buttons
@@ -963,7 +930,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // REMOVE BENEFICIARY
   // =========================================
 
-  function removeBeneficiary(
+  function editBeneficiary(beneficiary) {
+    editingBeneficiaryId = beneficiary.id;
+    document.getElementById("beneficiary-name").value = beneficiary.name;
+    document.getElementById("beneficiary-account").value = beneficiary.accountNumber;
+    document.getElementById("beneficiary-nickname").value = beneficiary.nickname || "";
+
+    if (beneficiaryFormTitle) beneficiaryFormTitle.textContent = "Edit beneficiary";
+    if (beneficiarySaveBtn) beneficiarySaveBtn.textContent = "Update beneficiary";
+
+    document.getElementById("beneficiary-name").focus();
+  }
+
+
+  async function removeBeneficiary(
     id
   ) {
 
@@ -978,29 +958,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    const beneficiaries =
-      getBeneficiaries();
+    try {
+      const response = await apiRequest(`/beneficiaries/${id}`, {
+        method: "DELETE",
+      });
 
-
-    const updated =
-      beneficiaries.filter(
-        (beneficiary) =>
-          beneficiary.id !== id
-      );
-
-
-    saveBeneficiaries(
-      updated
-    );
-
-
-    renderBeneficiaries();
-
-
-    showBeneficiaryMessage(
-      "Beneficiary removed.",
-      "success"
-    );
+      if (editingBeneficiaryId === id) resetBeneficiaryForm();
+      await renderBeneficiaries();
+      showBeneficiaryMessage(response.message, "success");
+    } catch (error) {
+      showBeneficiaryMessage(error.message, "error");
+    }
 
   }
 
@@ -1110,13 +1078,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================
 
   function openMobileModal() {
-
-    mobileModal.classList.add("open");
-
-    mobileModal.setAttribute(
-      "aria-hidden",
-      "false"
-    );
+    showDashboardModal(mobileModal, document.activeElement);
 
   }
 
@@ -1126,13 +1088,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================
 
   function closeMobileModal() {
-
-    mobileModal.classList.remove("open");
-
-    mobileModal.setAttribute(
-      "aria-hidden",
-      "true"
-    );
+    hideDashboardModal(mobileModal);
 
     clearMessage();
 
@@ -1454,10 +1410,10 @@ document.addEventListener("DOMContentLoaded", () => {
   ) {
 
     return new Intl.NumberFormat(
-      "en-US",
+      "en-IN",
       {
         style: "currency",
-        currency: "USD"
+        currency: "INR"
       }
     ).format(
       Number(amount) || 0
@@ -1612,15 +1568,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================
 
   function openNotifications() {
-
-    notificationModal.classList.add(
-      "open"
-    );
-
-    notificationModal.setAttribute(
-      "aria-hidden",
-      "false"
-    );
+    showDashboardModal(notificationModal, document.activeElement);
 
     renderNotifications();
 
@@ -1632,15 +1580,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================
 
   function closeNotifications() {
-
-    notificationModal.classList.remove(
-      "open"
-    );
-
-    notificationModal.setAttribute(
-      "aria-hidden",
-      "true"
-    );
+    hideDashboardModal(notificationModal);
 
   }
 
@@ -2069,13 +2009,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================
 
   function openBillModal() {
-
-    billModal.classList.add("open");
-
-    billModal.setAttribute(
-      "aria-hidden",
-      "false"
-    );
+    showDashboardModal(billModal, document.activeElement);
 
   }
 
@@ -2085,13 +2019,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================
 
   function closeBillModal() {
-
-    billModal.classList.remove("open");
-
-    billModal.setAttribute(
-      "aria-hidden",
-      "true"
-    );
+    hideDashboardModal(billModal);
 
     clearBillMessage();
 
@@ -2433,10 +2361,10 @@ document.addEventListener("DOMContentLoaded", () => {
   ) {
 
     return new Intl.NumberFormat(
-      "en-US",
+      "en-IN",
       {
         style: "currency",
-        currency: "USD"
+        currency: "INR"
       }
     ).format(
       Number(amount) || 0

@@ -1,143 +1,53 @@
 # Ledger Bank
 
-A full-stack banking web application built to simulate a modern digital banking experience. The application provides secure authentication, account management, money transfers, add-funds functionality, transaction history, and other banking services through a professional responsive interface.
+Ledger Bank is a full-stack digital banking demonstration redesigned as a premium fintech/SaaS product.
 
-> **Note:** Ledger Bank is a demonstration/portfolio project. Financial transactions, OTPs, payment methods, and passcodes are simulated and are not connected to real banking or payment systems.
+## Product surface
 
----
+- **Home** — premium product-led marketing site with product preview, feature system, workflow, security and FAQ.
+- **Authentication** — login, registration with inline OTP/demo verification, and inline password recovery using the existing auth logic.
+- **Dashboard** — account overview, balance, quick actions, services, backend-backed beneficiaries, cards, notifications and recent activity.
+- **Payments** — Send Money, Add Funds and payment activity using the existing backend APIs.
+- **Manage** — transactions, statements, profile, password/security and session information.
+- **Features / Security / Help / About** — supporting product pages for a more complete SaaS-style website experience.
 
-## 🚀 Features
+## Stack
 
-### 🔐 Authentication
-- User registration
-- User login
-- JWT-based authentication
-- Password hashing with bcrypt
-- OTP verification during registration
-- Forgot password functionality
-- Password reset using OTP
-- Logout functionality
-- Protected authenticated routes
+Frontend: HTML, CSS, JavaScript
+Backend: Node.js, Express, SQLite (`better-sqlite3`), bcryptjs, JWT
 
-### 🏦 Account Management
-- View primary bank account
-- View account number
-- View available balance
-- Protected balance using a 4-digit passcode
-- Edit profile information
-- Change account password
-
-### 💸 Money Transfer
-- Transfer money using recipient account number
-- Transfer amount validation
-- Insufficient balance validation
-- Prevent transfers to the same account
-- 4-digit passcode verification
-- Backend transfer authorization
-- Automatic transaction record creation
-
-### 💰 Add Funds
-Supports simulated funding through:
-- Debit / Credit Card
-- UPI
-- Bank Account
-
-Includes:
-- Amount validation
-- Funding method validation
-- Card details validation
-- UPI ID validation
-- Bank account and IFSC validation
-- 4-digit passcode verification
-- Automatic balance update
-- Transaction record generation
-
-### 📜 Transaction History
-- View recent transactions
-- Deposit/add-funds records
-- Money transfer records
-- Credit/debit direction
-- Transaction amount
-- Transaction date
-- Transaction notes
-- Transaction filtering and search
-
-### 💳 Additional Banking Services
-- Cards
-- Beneficiaries
-- Mobile payments
-- Notifications
-- Bill payments
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend
-- HTML5
-- CSS3
-- JavaScript
-- Responsive UI
+## Run locally
 
 ### Backend
-- Node.js
-- Express.js
-- JWT
-- bcryptjs
-- dotenv
-- CORS
 
-### Database
-- SQLite
-- better-sqlite3
+```bash
+cd backend
+cp .env.example .env
+npm install
+npm start
+```
 
-### Development Tools
-- Git
-- GitHub
-- Visual Studio Code
-- npm
+The API runs on `http://localhost:4000` by default.
 
----
+### Frontend
 
-## 📁 Project Structure
+Open another terminal:
 
-```text
-banking-app/
-│
-├── backend/
-│   ├── db/
-│   │   ├── database.js
-│   │   ├── schema.sql
-│   │   └── seed.js
-│   │
-│   ├── middleware/
-│   │   └── auth.js
-│   │
-│   ├── routes/
-│   │   ├── account.js
-│   │   ├── auth.js
-│   │   └── transactions.js
-│   │
-│   ├── .env.example
-│   ├── package.json
-│   └── server.js
-│
-├── frontend/
-│   ├── css/
-│   │   └── style.css
-│   │
-│   ├── js/
-│   │   ├── api.js
-│   │   ├── auth.js
-│   │   ├── dashboard.js
-│   │   ├── manage.js
-│   │   └── transactions.js
-│   │
-│   ├── index.html
-│   ├── auth.html
-│   ├── dashboard.html
-│   ├── manage.html
-│   └── transactions.html
-│
-├── .gitignore
-└── README.md
+```bash
+cd frontend
+npx serve .
+```
+
+Then open the local URL shown by `serve` (normally `http://localhost:3000`).
+
+## Demo account
+
+If you seed the database with the provided seed script, the demo account can be created with the credentials defined in `backend/db/seed.js`.
+
+## Important
+
+This is a demonstration project, not a production banking system. External payment networks, SMS/email delivery and several service actions are simulated. Before production use, the project would require a full security, compliance, infrastructure and financial-integration review.
+
+## Design direction
+
+The visual system takes high-level inspiration from modern premium SaaS/fintech product sites: strong product storytelling, large editorial typography, product mockups, structured feature sections, clear calls to action and a consistent application shell. It does not copy Elirox's proprietary content, assets or exact page implementation.

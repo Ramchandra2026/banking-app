@@ -5,6 +5,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const accountRoutes = require("./routes/account");
 const transactionRoutes = require("./routes/transactions");
+const beneficiaryRoutes = require("./routes/beneficiaries");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -17,6 +18,7 @@ app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/account", accountRoutes);
 app.use("/api/transactions", transactionRoutes);
+app.use("/api/beneficiaries", beneficiaryRoutes);
 
 // Fallback 404 for unknown API routes
 app.use("/api", (req, res) => res.status(404).json({ error: "Not found." }));

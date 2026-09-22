@@ -1,4 +1,5 @@
 let primaryAccount = null;
+let transferBeneficiaries = [];
 
 
 /* =====================================
@@ -51,6 +52,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupTabs();
 
   setupFundingMethods();
+
+  setupTransferBeneficiaries();
 
 
   /* =====================================
@@ -231,6 +234,78 @@ function activateTab(tabName) {
 
     });
 
+}
+
+
+/* =====================================
+   TRANSFER BENEFICIARIES
+===================================== */
+
+async function setupTransferBeneficiaries() {
+
+  const select = document.getElementById("transferBeneficiary");
+
+  if (!select) return;
+
+  select.addEventListener("change", handleTransferBeneficiaryChange);
+
+  try {
+    const response = await apiRequest("/beneficiaries");
+    transferBeneficiaries = response.beneficiaries || [];
+    renderTransferBeneficiaries(select);
+  } catch (error) {
+    transferBeneficiaries = [];
+    showNote(
+      "transfer-note",
+      "Saved beneficiaries could not be loaded. You can still enter an account number manually."
+    );
+  }
+}
+
+
+function renderTransferBeneficiaries(select) {
+
+  select.replaceChildren();
+
+  const manualOption = document.createElement("option");
+  manualOption.value = "";
+  manualOption.textContent = "Enter account number manually";
+  select.appendChild(manualOption);
+
+  transferBeneficiaries.forEach((beneficiary) => {
+    const option = document.createElement("option");
+    option.value = String(beneficiary.id);
+    option.textContent = beneficiary.nickname || beneficiary.name;
+    select.appendChild(option);
+  });
+}
+
+
+function handleTransferBeneficiaryChange() {
+
+  const select = document.getElementById("transferBeneficiary");
+  const accountInput = document.getElementById("toAccountNumber");
+  const details = document.getElementById("transfer-beneficiary-details");
+
+  if (!select || !accountInput) return;
+
+  const beneficiary = transferBeneficiaries.find(
+    (item) => String(item.id) === select.value
+  );
+
+  if (!beneficiary) {
+    accountInput.readOnly = false;
+    accountInput.value = "";
+    if (details) details.textContent = "";
+    return;
+  }
+
+  accountInput.value = beneficiary.accountNumber;
+  accountInput.readOnly = true;
+
+  if (details) {
+    details.textContent = `Sending to ${beneficiary.nickname || beneficiary.name}.`;
+  }
 }
 
 
@@ -480,6 +555,10 @@ function handleFundingMethodChange() {
 
     cardDetails.hidden = true;
 
+    cardDetails.classList.remove(
+      "active"
+    );
+
   }
 
 
@@ -487,12 +566,20 @@ function handleFundingMethodChange() {
 
     upiDetails.hidden = true;
 
+    upiDetails.classList.remove(
+      "active"
+    );
+
   }
 
 
   if (bankDetails) {
 
     bankDetails.hidden = true;
+
+    bankDetails.classList.remove(
+      "active"
+    );
 
   }
 
@@ -508,6 +595,10 @@ function handleFundingMethodChange() {
 
     cardDetails.hidden = false;
 
+    cardDetails.classList.add(
+      "active"
+    );
+
   }
 
 
@@ -518,6 +609,10 @@ function handleFundingMethodChange() {
 
     upiDetails.hidden = false;
 
+    upiDetails.classList.add(
+      "active"
+    );
+
   }
 
 
@@ -527,6 +622,10 @@ function handleFundingMethodChange() {
   ) {
 
     bankDetails.hidden = false;
+
+    bankDetails.classList.add(
+      "active"
+    );
 
   }
 
@@ -604,6 +703,18 @@ async function handleTransfer(e) {
     document.getElementById(
       "transfer-submit"
     );
+
+
+  const beneficiarySelect =
+    document.getElementById(
+      "transferBeneficiary"
+    );
+
+
+  const beneficiaryId =
+    beneficiarySelect && beneficiarySelect.value
+      ? beneficiarySelect.value
+      : undefined;
 
 
   /* =====================================
@@ -749,6 +860,10 @@ async function handleTransfer(e) {
           amount,
 
           note,
+
+          passcode,
+
+          beneficiaryId,
 
         },
 
@@ -1059,18 +1174,42 @@ async function handleDeposit(e) {
     "upi"
   ) {
 
+    const upiIdInput =
+      document.getElementById(
+        "upiId"
+      );
+
+
     const upiId =
-      document
-        .getElementById(
-          "upiId"
-        )
-        .value
+      (upiIdInput
+        ? upiIdInput.value
+        : "")
         .trim()
         .toLowerCase();
 
 
+    if (!upiId) {
+
+      showNote(
+        "deposit-note",
+        "Please enter your UPI ID."
+      );
+
+
+      if (upiIdInput) {
+
+        upiIdInput.focus();
+
+      }
+
+
+      return;
+
+    }
+
+
     if (
-      !/^[a-zA-Z0-9._-]{2,}@[a-zA-Z0-9._-]{2,}$/.test(
+      !/^[a-zA-Z0-9][a-zA-Z0-9._-]*@[a-zA-Z0-9][a-zA-Z0-9._-]*$/.test(
         upiId
       )
     ) {
@@ -1080,13 +1219,28 @@ async function handleDeposit(e) {
         "Please enter a valid UPI ID."
       );
 
+
+      if (upiIdInput) {
+
+        upiIdInput.focus();
+
+        upiIdInput.select();
+
+      }
+
+
       return;
 
     }
 
 
+    /*
+      The current transaction schema only stores a
+      transaction note, not payment metadata. Keep
+      the UPI ID on the client after validating it.
+    */
     fundingReference =
-      upiId;
+      "UPI payment";
 
   }
 

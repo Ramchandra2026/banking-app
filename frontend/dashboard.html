@@ -30,6 +30,8 @@
         Dashboard
       </a>
 
+      <a href="features.html">Features</a>
+
       <a href="manage.html" class="bank-nav-link">
         Manage
       </a>
@@ -97,55 +99,7 @@
          BALANCE + ACCOUNT
     ========================== -->
 
-    <section class="bank-overview-grid">
-
-
-      <!-- Balance Card -->
-
-      <div class="bank-balance-card">
-
-        <div class="balance-card-top">
-
-          <div>
-
-            <span class="bank-card-label">
-              Available balance
-            </span>
-
-            <h2 id="balance-amount">
-              $0.00
-            </h2>
-
-          </div>
-
-          <div class="balance-icon">
-            ₹
-          </div>
-
-        </div>
-
-
-        <div class="balance-card-bottom">
-
-          <div>
-
-            <span class="bank-card-small-label">
-              Primary account
-            </span>
-
-            <strong>
-              Checking Account
-            </strong>
-
-          </div>
-
-          <div class="balance-status">
-            Active
-          </div>
-
-        </div>
-
-      </div>
+    <section class="bank-overview-grid dashboard-account-only">
 
 
       <!-- Account Details -->
@@ -472,7 +426,7 @@
       <div class="recharge-amount-wrapper">
 
         <span>
-          $
+          ₹
         </span>
 
         <input
@@ -495,7 +449,7 @@
         class="recharge-amount-btn"
         data-amount="10"
       >
-        $10
+        ₹10
       </button>
 
       <button
@@ -503,7 +457,7 @@
         class="recharge-amount-btn"
         data-amount="20"
       >
-        $20
+        ₹20
       </button>
 
       <button
@@ -511,7 +465,7 @@
         class="recharge-amount-btn"
         data-amount="30"
       >
-        $30
+        ₹30
       </button>
 
       <button
@@ -519,7 +473,7 @@
         class="recharge-amount-btn"
         data-amount="50"
       >
-        $50
+        ₹50
       </button>
 
       <button
@@ -527,7 +481,7 @@
         class="recharge-amount-btn"
         data-amount="100"
       >
-        $100
+        ₹100
       </button>
 
     </div>
@@ -559,7 +513,7 @@
         </span>
 
         <strong id="mobile-payment-summary-amount">
-          $0.00
+          ₹0.00
         </strong>
 
       </div>
@@ -930,7 +884,7 @@
       <div class="bill-amount-wrapper">
 
         <span>
-          $
+          ₹
         </span>
 
         <input
@@ -955,7 +909,7 @@
         class="bill-amount-btn"
         data-amount="25"
       >
-        $25
+        ₹25
       </button>
 
       <button
@@ -963,7 +917,7 @@
         class="bill-amount-btn"
         data-amount="50"
       >
-        $50
+        ₹50
       </button>
 
       <button
@@ -971,7 +925,7 @@
         class="bill-amount-btn"
         data-amount="75"
       >
-        $75
+        ₹75
       </button>
 
       <button
@@ -979,7 +933,7 @@
         class="bill-amount-btn"
         data-amount="100"
       >
-        $100
+        ₹100
       </button>
 
     </div>
@@ -1017,7 +971,7 @@
         </span>
 
         <strong id="bill-payment-summary-amount">
-          $0.00
+          ₹0.00
         </strong>
 
       </div>
@@ -1165,7 +1119,7 @@
     </section>
 
 
-    <!-- =========================
+        <!-- =========================
          DIGITAL DEBIT CARD MODAL
     ========================== -->
 
@@ -1226,7 +1180,6 @@
           <div class="digital-card-bottom">
 
             <div>
-
               <small>
                 CARD HOLDER
               </small>
@@ -1234,11 +1187,9 @@
               <strong id="card-holder-name">
                 CARD HOLDER
               </strong>
-
             </div>
 
             <div>
-
               <small>
                 EXPIRES
               </small>
@@ -1246,7 +1197,6 @@
               <strong>
                 12/29
               </strong>
-
             </div>
 
           </div>
@@ -1256,7 +1206,6 @@
         <div class="card-modal-info">
 
           <div>
-
             <span>
               Card status
             </span>
@@ -1264,11 +1213,9 @@
             <strong>
               Active
             </strong>
-
           </div>
 
           <div>
-
             <span>
               Card type
             </span>
@@ -1276,7 +1223,6 @@
             <strong>
               Debit
             </strong>
-
           </div>
 
         </div>
@@ -1319,7 +1265,6 @@
           ×
         </button>
 
-
         <p class="bank-eyebrow">
           Payments
         </p>
@@ -1331,7 +1276,6 @@
         <p class="beneficiary-modal-description">
           Save trusted recipients for faster and easier transfers.
         </p>
-
 
         <!-- Beneficiary List -->
 
@@ -1363,7 +1307,7 @@
 
         <div class="beneficiary-add-section">
 
-          <h3>
+          <h3 id="beneficiary-form-title">
             Add beneficiary
           </h3>
 
@@ -1446,6 +1390,7 @@
               <button
                 type="submit"
                 class="beneficiary-save-btn"
+                id="beneficiary-save-btn"
               >
                 Save beneficiary
               </button>

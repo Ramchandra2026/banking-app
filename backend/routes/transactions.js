@@ -9,6 +9,7 @@ const router = express.Router();
 ===================================== */
 
 const ADD_FUNDS_PASSCODE = "1234";
+const TRANSFER_PASSCODE = "1234";
 
 /* =====================================
    GET OWNED ACCOUNT
@@ -537,6 +538,7 @@ router.post(
       amount,
       note,
       passcode,
+      beneficiaryId,
     } = req.body;
 
     const numericAmount =
@@ -576,7 +578,7 @@ router.post(
 
     if (
       cleanPasscode !==
-      ADD_FUNDS_PASSCODE
+      TRANSFER_PASSCODE
     ) {
       return res.status(401).json({
         error:
@@ -614,6 +616,39 @@ router.post(
       return res.status(404).json({
         error: "Source account not found.",
       });
+    }
+
+    /* =====================================
+       VERIFY SELECTED BENEFICIARY
+    ====================================== */
+
+    if (beneficiaryId !== undefined && beneficiaryId !== null && beneficiaryId !== "") {
+      const numericBeneficiaryId = Number(beneficiaryId);
+
+      if (!Number.isSafeInteger(numericBeneficiaryId) || numericBeneficiaryId <= 0) {
+        return res.status(400).json({
+          error: "Invalid beneficiary ID.",
+        });
+      }
+
+      const beneficiary = db
+        .prepare(
+          `SELECT account_number FROM beneficiaries
+           WHERE id = ? AND user_id = ?`
+        )
+        .get(numericBeneficiaryId, req.userId);
+
+      if (!beneficiary) {
+        return res.status(404).json({
+          error: "Beneficiary not found.",
+        });
+      }
+
+      if (beneficiary.account_number !== String(toAccountNumber).trim()) {
+        return res.status(400).json({
+          error: "Selected beneficiary does not match the recipient account.",
+        });
+      }
     }
 
     /* =====================================

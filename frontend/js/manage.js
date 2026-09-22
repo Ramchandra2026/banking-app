@@ -333,21 +333,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   // FORMAT CURRENCY
   // =========================================
 
+ 
   function formatCurrency(amount) {
 
-    const number =
-      Number(amount) || 0;
+  const number =
+    Number(amount) || 0;
 
+  return new Intl.NumberFormat(
+    "en-IN",
+    {
+      style: "currency",
+      currency: "INR"
+    }
+  ).format(number);
 
-    return new Intl.NumberFormat(
-      "en-US",
-      {
-        style: "currency",
-        currency: "USD"
-      }
-    ).format(number);
-
-  }
+}
 
 
   // =========================================
@@ -804,14 +804,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function logout() {
 
-    localStorage.removeItem("token");
+  localStorage.removeItem("ledger_token");
+  localStorage.removeItem("ledger_user");
 
-    localStorage.removeItem("user");
+  sessionStorage.clear();
 
-    window.location.href =
-      "auth.html";
-
-  }
+  window.location.href = "auth.html";
+}
 
 
   // Top logout button
